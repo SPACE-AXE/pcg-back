@@ -4,6 +4,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 
+const documentEndpoint = process.env.SWAGGER_ENDPOINT;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors({
@@ -13,7 +15,7 @@ async function bootstrap() {
   app.use(helmet());
 
   app.use(
-    ['/docs'],
+    [documentEndpoint],
     expressBasicAuth({
       challenge: true,
       users: { [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD },
@@ -25,7 +27,7 @@ async function bootstrap() {
     .setVersion('1.0')
     .build();
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('/docs', app, document);
+  SwaggerModule.setup(documentEndpoint, app, document);
   await app.listen(3000);
 }
 bootstrap();
