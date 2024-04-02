@@ -2,6 +2,10 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import typeORMConfig from './config/typeorm.config';
 
 @Module({
   imports: [
@@ -11,6 +15,9 @@ import { ThrottlerModule } from '@nestjs/throttler';
         limit: 50,
       },
     ]),
+    TypeOrmModule.forRoot(typeORMConfig),
+    UserModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService],
