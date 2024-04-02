@@ -1,8 +1,10 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as expressBasicAuth from 'express-basic-auth';
+import expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
+import { ValidationPipe } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 
 const documentEndpoint = process.env.SWAGGER_ENDPOINT;
 
@@ -13,18 +15,45 @@ async function bootstrap() {
     credentials: true,
   });
   app.use(helmet());
-
-  app.use(
-    [documentEndpoint],
-    expressBasicAuth({
-      challenge: true,
-      users: { [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD },
+  app.use(cookieParser());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
     }),
   );
+  process.env.NODE_ENV === 'production'
+    ? app.use(
+        [documentEndpoint],
+        expressBasicAuth({
+          challenge: true,
+          users: {
+            [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD,
+          },
+        }),
+      )
+    : undefined;
   const config = new DocumentBuilder()
     .setTitle('박차고 API')
     .setDescription('박차고 API 문서입니다.')
-    .setVersion('1.0')
+    .setVersion('0.0.1')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Token',
+      },
+      'access-token',
+    )
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'Token',
+      },
+      'refresh-token',
+    )
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(documentEndpoint, app, document);
