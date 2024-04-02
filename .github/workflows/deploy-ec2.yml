@@ -29,5 +29,5 @@ jobs:
             cd /home/ubuntu/pcg && \
             git pull -f origin main && \
             $bun i && \
-            $bun typeorm:migrate:run && \
-            $bun build"
+            npm run typeorm:migrate:run && \
+            npm run build"
