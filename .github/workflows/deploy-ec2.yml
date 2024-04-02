@@ -8,7 +8,6 @@ env:
   AWS_DEFAULT_REGION: ap-northeast-2
   SSH_PRIVATE_KEY: ${{ secrets.EC2_KEY }}
   EC2_IP: ${{ secrets.EC2_PUBLIC_IP }}
-  bun: /home/ubuntu/.bun/bin/bun
 
 jobs:
   deploy:
@@ -28,6 +27,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
             cd /home/ubuntu/pcg && \
             git pull -f origin main && \
-            bun i && \
-            bun typeorm:migrate:run && \
-            bun build"
+            $bun i && \
+            $bun typeorm:migrate:run && \
+            $bun build"
