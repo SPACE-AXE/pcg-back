@@ -28,9 +28,6 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
             cd /home/ubuntu/pcg && \
             git pull -f origin main && \
-            export NVM_DIR="$HOME/.nvm" && \
-            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm && \
-            [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion && \
             $bun i && \
-            npm run typeorm:migrate:run && \
-            npm run build"
+            $bun run typeorm:migrate:run && \
+            $bun run build"
