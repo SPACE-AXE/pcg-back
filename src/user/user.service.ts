@@ -5,16 +5,18 @@ import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly configService: ConfigService,
   ) {}
 
   async create(createUserDto: CreateUserDto) {
     createUserDto.birth = new Date(createUserDto.birth);
-    const salt = bcrypt.genSaltSync(+process.env.SALT_ROUNDS);
+    const salt = bcrypt.genSaltSync(+this.configService.get('JWT_SECRET'));
     createUserDto.password = bcrypt.hashSync(createUserDto.password, salt);
     const newUser = this.userRepository.create(createUserDto);
     return await this.userRepository.save(newUser);

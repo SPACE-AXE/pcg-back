@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
 import { Observable } from 'rxjs';
@@ -14,6 +15,7 @@ export class JwtAuthGuard implements CanActivate {
   constructor(
     private readonly jwtService: JwtService,
     private readonly userService: UserService,
+    private readonly configService: ConfigService,
   ) {}
   canActivate(
     context: ExecutionContext,
@@ -29,7 +31,7 @@ export class JwtAuthGuard implements CanActivate {
 
     try {
       const decodedAccessToken = this.jwtService.verify(accessToken, {
-        secret: process.env.JWT_SECRET,
+        secret: this.configService.get('JWT_SECRET'),
       });
       const user = this.userService.findOne(decodedAccessToken.id);
       request.user = user;
@@ -37,7 +39,7 @@ export class JwtAuthGuard implements CanActivate {
     } catch (accessTokenError) {
       try {
         const decodedRefreshToken = this.jwtService.verify(refreshToken, {
-          secret: process.env.JWT_SECRET,
+          secret: this.configService.get('JWT_SECRET'),
         });
         const user = this.userService.findOne(decodedRefreshToken.id);
         const newAccessToken = this.jwtService.sign(
@@ -46,7 +48,7 @@ export class JwtAuthGuard implements CanActivate {
             id: decodedRefreshToken.id,
             nickname: decodedRefreshToken.nickname,
           },
-          { secret: process.env.JWT_SECRET, expiresIn: '1h' },
+          { secret: this.configService.get('JWT_SECRET'), expiresIn: '1h' },
         );
         request.user = user;
         response.cookie('access-token', newAccessToken, { httpOnly: true });
