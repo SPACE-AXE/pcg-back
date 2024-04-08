@@ -16,19 +16,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-
-      - name: Set up SSH key
-        run: |
-          echo "$SSH_PRIVATE_KEY" >> $HOME/key.pem
-          chmod 400 $HOME/key.pem
-
-      - name: SSH into remote server and run commands
-        run: |
-          ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
-            cd /home/ubuntu/pcg && \
-            git pull -f origin main && \
-            $bun i && \
-            $bun run typeorm:migrate:run && \
-            $bun run build"
+      - name: excuting remote ssh commands
+        uses: appleboy/ssh-action@v0.1.6 # ssh 접속하는 오픈소스
+        with:
+          host: $EC2_IP # 인스턴스 IP
+          username: ubuntu # 우분투 아이디
+          key: $SSH_PRIVATE_KEY # ec2 instance pem key
+          port: 22 # 접속포트
+          script: | # 실행할 스크립트
+            cd /home/ubuntu/pcg
+            git pull -f origin main
+            bun i
+            bun run typeorm:migrate:run
+            bun run build
