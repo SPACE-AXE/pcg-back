@@ -6,6 +6,7 @@ on:
       - main
 env:
   AWS_DEFAULT_REGION: ap-northeast-2
+  bun: /home/ubuntu/.bun/bin/bun
 
 jobs:
   deploy:
