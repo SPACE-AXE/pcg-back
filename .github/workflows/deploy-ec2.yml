@@ -25,6 +25,7 @@ jobs:
       - name: SSH into remote server and run commands
         run: |
           ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
+            source ~/.nvm/nvm.sh
             cd /home/ubuntu/pcg && \
             git pull -f origin main && \
             bun i && \
