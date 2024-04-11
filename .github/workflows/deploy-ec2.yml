@@ -6,24 +6,27 @@ on:
       - main
 env:
   AWS_DEFAULT_REGION: ap-northeast-2
-  bun: /home/ubuntu/.bun/bin/bun
+  SSH_PRIVATE_KEY: ${{ secrets.EC2_KEY }}
+  EC2_IP: ${{ secrets.EC2_PUBLIC_IP }}
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: excuting remote ssh commands
-        uses: appleboy/ssh-action@v0.1.6 # ssh 접속하는 오픈소스
-        with:
-          host: ${{ secrets.EC2_PUBLIC_IP }} # 인스턴스 IP
-          username: ubuntu # 우분투 아이디
-          key: ${{ secrets.EC2_KEY }} # ec2 instance pem key
-          port: 22 # 접속포트
-          script: | # 실행할 스크립트
-            source ~/.nvm/nvm.sh
-            cd /home/ubuntu/pcg
-            git pull -f origin main
-            npm i
-            npm run typeorm:migrate:run
-            npm run build
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up SSH key
+        run: |
+          echo "$SSH_PRIVATE_KEY" >> $HOME/key.pem
+          chmod 400 $HOME/key.pem
+
+      - name: SSH into remote server and run commands
+        run: |
+          ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
+            cd /home/ubuntu/pcg && \
+            git pull -f origin main && \
+            bun i && \
+            bun run typeorm:migrate:run && \
+            bun run build"
