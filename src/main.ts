@@ -5,11 +5,8 @@ import expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
-import dotenv from 'dotenv';
 
 const documentEndpoint = process.env.SWAGGER_ENDPOINT;
-
-dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
