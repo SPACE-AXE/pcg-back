@@ -7,6 +7,8 @@ import { AuthModule } from './auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeORMConfig from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
+import { SocketModule } from './socket/socket.module';
+import { ParkModule } from './park/park.module';
 
 @Module({
   imports: [
@@ -23,6 +25,8 @@ import { ConfigModule } from '@nestjs/config';
     TypeOrmModule.forRoot(typeORMConfig),
     UserModule,
     AuthModule,
+    SocketModule,
+    ParkModule,
   ],
   controllers: [AppController],
   providers: [AppService],

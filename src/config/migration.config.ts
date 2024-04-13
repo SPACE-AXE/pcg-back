@@ -12,7 +12,7 @@ const typeORMConfig: DataSourceOptions = {
   synchronize: false,
   migrationsRun: false,
   migrationsTableName: 'migrations',
-  migrations: ['dist/migration/*{.ts,.js}'],
+  migrations: ['src/migration/*{.ts,.js}'],
   logging: true,
   logger: 'file',
 };
