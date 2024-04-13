@@ -1,7 +1,10 @@
 import {
   Body,
+  ConflictException,
   Controller,
+  Get,
   HttpCode,
+  Param,
   Post,
   Req,
   Res,
@@ -16,6 +19,7 @@ import {
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
@@ -57,5 +61,16 @@ export class AuthController {
   @ApiConflictResponse({ description: '특정 항목 중복' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Get('check-username-duplicate/:username')
+  @ApiOperation({ summary: '아이디 중복 확인' })
+  @ApiParam({ name: 'username', description: '아이디' })
+  @ApiOkResponse({ description: '아이디 사용 가능 (Body 없음)' })
+  @ApiConflictResponse({ description: '아이디 중복' })
+  async checkUserNameDuplicate(@Param('username') username: string) {
+    const user = await this.userService.findOneByUserName(username);
+    if (!user) return;
+    else throw new ConflictException('Username already exists');
   }
 }
