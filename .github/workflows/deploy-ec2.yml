@@ -27,7 +27,9 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
             source ~/.nvm/nvm.sh
             cd /home/ubuntu/pcg && \
+            pm2 delete pcg && \
             git pull -f origin main && \
             bun i && \
             bun run typeorm:migrate:run && \
-            bun run build"
+            bun run build && \
+            pm2 start --name pcg bun -- start:prod"
