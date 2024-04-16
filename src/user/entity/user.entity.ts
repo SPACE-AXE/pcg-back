@@ -26,7 +26,7 @@ export class User {
   @Column({ length: 200 })
   password: string;
 
-  @Column({ type: 'datetime', precision: 6 })
+  @Column({ type: 'date' })
   birth: Date;
 
   @CreateDateColumn({ name: 'created_at' })
