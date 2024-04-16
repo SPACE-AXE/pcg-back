@@ -1,4 +1,4 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, Point, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('park')
 export class Park {
@@ -11,24 +11,21 @@ export class Park {
   @Column({ length: 15, unique: true })
   phone: string;
 
-  @Column({ type: 'decimal', nullable: false })
-  lat: number;
-
-  @Column({ type: 'decimal', nullable: false })
-  lng: number;
-
   @Column({ length: 100, nullable: false })
   address: string;
 
-  @Column({ nullable: false })
-  total_space: number;
+  @Column({ name: 'total_space', nullable: false })
+  totalSpace: number;
 
-  @Column({ nullable: false, default: 0 })
-  car_space: number;
+  @Column({ name: 'car_space', nullable: false, default: 0 })
+  carSpace: number;
 
-  @Column()
-  disability_space: number;
+  @Column({ name: 'disability_space' })
+  disabilitySpace: number;
 
-  @Column({ length: 100, nullable: false })
-  manage_code: string;
+  @Column({ name: 'manage_code', length: 100, nullable: false })
+  manageCode: string;
+
+  @Column({ type: 'point', nullable: false })
+  location: Point;
 }

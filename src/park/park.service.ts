@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { CreateParkDto } from './dto/create-park.dto';
 import { UpdateParkDto } from './dto/update-park.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Park } from './entities/park.entity';
-import { Repository } from 'typeorm';
+import { QueryFailedError, Repository } from 'typeorm';
 
 @Injectable()
 export class ParkService {
@@ -11,12 +11,30 @@ export class ParkService {
     @InjectRepository(Park) private readonly parkRepository: Repository<Park>,
   ) {}
 
-  create(createParkDto: CreateParkDto) {
-    return 'This action adds a new park';
+  async create(createParkDto: CreateParkDto) {
+    try {
+      const location = `${createParkDto.location.x} ${createParkDto.location.y}`;
+      await this.parkRepository
+        .createQueryBuilder()
+        .insert()
+        .into(Park)
+        .values({
+          ...createParkDto,
+          location: () => `ST_GeomFromText('POINT(${location})')`,
+        })
+        .execute();
+    } catch (error) {
+      console.error(error);
+      if (error instanceof QueryFailedError) {
+        throw new ConflictException(error.message);
+      }
+    }
   }
 
-  findAll() {
-    return `This action returns all park`;
+  async findAll() {
+    return (await this.parkRepository.query(
+      'SELECT * FROM park',
+    )) as CreateParkDto;
   }
 
   findOne(id: number) {
