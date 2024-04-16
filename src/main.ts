@@ -55,8 +55,12 @@ async function bootstrap() {
       'refresh-token',
     )
     .build();
+
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(documentEndpoint, app, document);
+  SwaggerModule.setup(documentEndpoint, app, document, {
+    customSiteTitle:
+      process.env.NODE_ENV === 'production' ? '박차고 API' : '박차고 API - dev',
+  });
   await app.listen(3000);
 }
 bootstrap();
