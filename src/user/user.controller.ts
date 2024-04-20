@@ -15,7 +15,7 @@ import { User } from './entity/user.entity';
 import { UpdateResult } from 'typeorm';
 
 @Controller('user')
-@ApiTags('user')
+@ApiTags('사용자')
 @ApiBadRequestResponse({ description: '입력값 오류' })
 export class UserController {
   constructor(private readonly userService: UserService) {}

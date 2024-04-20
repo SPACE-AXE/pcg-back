@@ -29,7 +29,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 
 @Controller('auth')
-@ApiTags('auth')
+@ApiTags('인증')
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
