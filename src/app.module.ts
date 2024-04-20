@@ -9,6 +9,8 @@ import typeORMConfig from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { SocketModule } from './socket/socket.module';
 import { ParkModule } from './park/park.module';
+import { CarModule } from './car/car.module';
+import { ParkingTransactionModule } from './parking-transaction/parking-transaction.module';
 
 @Module({
   imports: [
@@ -27,6 +29,8 @@ import { ParkModule } from './park/park.module';
     AuthModule,
     SocketModule,
     ParkModule,
+    CarModule,
+    ParkingTransactionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

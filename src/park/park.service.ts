@@ -1,51 +1,49 @@
-import { ConflictException, Injectable } from '@nestjs/common';
-import { CreateParkDto } from './dto/create-park.dto';
-import { UpdateParkDto } from './dto/update-park.dto';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Park } from './entities/park.entity';
-import { QueryFailedError, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
+import { ApiProperty } from '@nestjs/swagger';
+import { LocationQueryDto } from './dto/location.dto';
 
+export class ParkGetResult {
+  @ApiProperty({ description: '주차장 ID' })
+  id: number;
+  @ApiProperty({ description: '주차장 이름' })
+  name: string;
+  @ApiProperty({ description: '주차장 전화번호' })
+  phone: string;
+  @ApiProperty({ description: '주차장 주소' })
+  address: string;
+  @ApiProperty({ description: '주차장 전체 주차 공간' })
+  totalSpace: number;
+  @ApiProperty({ description: '주차장 일반 주차 공간' })
+  carSpace: number;
+  @ApiProperty({ description: '주차장 장애인 주차 공간' })
+  disabilitySpace: number;
+  @ApiProperty({ description: '주차장 위치' })
+  location: LocationQueryDto;
+}
 @Injectable()
 export class ParkService {
   constructor(
     @InjectRepository(Park) private readonly parkRepository: Repository<Park>,
   ) {}
 
-  async create(createParkDto: CreateParkDto) {
-    try {
-      const location = `${createParkDto.location.x} ${createParkDto.location.y}`;
-      await this.parkRepository
-        .createQueryBuilder()
-        .insert()
-        .into(Park)
-        .values({
-          ...createParkDto,
-          location: () => `ST_GeomFromText('POINT(${location})')`,
-        })
-        .execute();
-    } catch (error) {
-      console.error(error);
-      if (error instanceof QueryFailedError) {
-        throw new ConflictException(error.message);
-      }
+  async findByLocation(x: number, y: number) {
+    const results = await this.parkRepository.query(
+      `SELECT * FROM park WHERE ST_Distance_Sphere(park.location, Point(${x}, ${y})) <= 5000;`,
+    );
+
+    for (const result of results) {
+      delete result.manage_code;
+      result.totalSpace = result.total_space;
+      delete result.total_space;
+      result.carSpace = result.car_space;
+      delete result.car_space;
+      result.disabilitySpace = result.disability_space;
+      delete result.disability_space;
     }
-  }
 
-  async findAll() {
-    return (await this.parkRepository.query(
-      'SELECT * FROM park',
-    )) as CreateParkDto;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} park`;
-  }
-
-  update(id: number, updateParkDto: UpdateParkDto) {
-    return `This action updates a #${id} park`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} park`;
+    return results as ParkGetResult[];
   }
 }

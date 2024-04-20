@@ -14,13 +14,13 @@ export class User {
   @Column({ length: 20 })
   name: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, unique: true })
   nickname: string;
 
-  @Column({ length: 100 })
+  @Column({ length: 100, unique: true })
   email: string;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, unique: true })
   username: string;
 
   @Column({ length: 200 })
@@ -32,6 +32,6 @@ export class User {
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 
-  @DeleteDateColumn({ name: 'deleted_at' })
+  @DeleteDateColumn({ name: 'deleted_at', nullable: false })
   deletedAt: Date;
 }
