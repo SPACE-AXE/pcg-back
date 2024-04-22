@@ -1,52 +1,46 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { ParkingTransactionService } from './parking-transaction.service';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
-import { UpdateParkingTransactionDto } from './dto/update-parking-transaction.dto';
-import { ApiTags } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiCreatedResponse,
+  ApiOperation,
+  ApiTags,
+  ApiUnauthorizedResponse,
+} from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { Request } from 'express';
+import { ParkingTransaction } from './entities/parking-transaction.entity';
 
 @Controller('parking-transaction')
 @ApiTags('입출차 내역')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard)
+@ApiUnauthorizedResponse({ description: '토큰 만료' })
 export class ParkingTransactionController {
   constructor(
     private readonly parkingTransactionService: ParkingTransactionService,
   ) {}
 
   @Post()
-  create(@Body() createParkingTransactionDto: CreateParkingTransactionDto) {
-    return this.parkingTransactionService.create(createParkingTransactionDto);
-  }
-
-  @Get()
-  findAll() {
-    return this.parkingTransactionService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.parkingTransactionService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateParkingTransactionDto: UpdateParkingTransactionDto,
+  @ApiOperation({ summary: '입차 내역 기록' })
+  @ApiCreatedResponse({
+    description: '입차 내역 기록 성공',
+    type: ParkingTransaction,
+  })
+  create(
+    @Req() req: Request,
+    @Body() createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
-    return this.parkingTransactionService.update(
-      +id,
-      updateParkingTransactionDto,
+    return this.parkingTransactionService.create(
+      req.user,
+      createParkingTransactionDto,
     );
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.parkingTransactionService.remove(+id);
+  @Get()
+  @ApiOperation({ summary: '입출차 내역 조회' })
+  findAll(@Req() req: Request) {
+    return this.parkingTransactionService.findAll(req.user);
   }
 }

@@ -23,7 +23,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from 'src/user/entity/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';

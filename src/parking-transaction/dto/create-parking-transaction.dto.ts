@@ -1,5 +1,8 @@
+import { IsNumber } from 'class-validator';
+
 export class CreateParkingTransactionDto {
-  userId: number;
+  @IsNumber()
   parkId: number;
+  @IsNumber()
   carId: number;
 }
