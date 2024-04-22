@@ -1,6 +1,7 @@
 import {
   CanActivate,
   ExecutionContext,
+  ForbiddenException,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -24,7 +25,7 @@ export class JwtAuthGuard implements CanActivate {
     const refreshToken = request.cookies['refresh-token'];
 
     if (!accessToken || !refreshToken)
-      throw new UnauthorizedException('Token not found');
+      throw new ForbiddenException('Token not found');
 
     try {
       const decodedAccessToken = this.jwtService.verify(accessToken, {
