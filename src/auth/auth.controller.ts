@@ -27,6 +27,7 @@ import { User } from 'src/user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -49,8 +50,8 @@ export class AuthController {
     const userData = req.user as User;
     const { user, ...tokens } = await this.authService.login(userData);
     res
-      .cookie('access-token', tokens.accessToken, { httpOnly: true })
-      .cookie('refresh-token', tokens.refreshToken, { httpOnly: true })
+      .cookie(AccessToken, tokens.accessToken, { httpOnly: true })
+      .cookie(RefreshToken, tokens.refreshToken, { httpOnly: true })
       .send(user);
   }
 
