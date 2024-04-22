@@ -1,12 +1,11 @@
 import { Car } from 'src/car/entities/car.entity';
 import { Park } from 'src/park/entities/park.entity';
-import { User } from 'src/user/entity/user.entity';
+import { User } from 'src/user/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   ManyToOne,
-  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -26,8 +25,8 @@ export class ParkingTransaction {
   amount: number;
   @ManyToOne(() => User, (user) => user.id)
   user: User;
-  @OneToOne(() => Park, (park) => park.id)
+  @ManyToOne(() => Park, (park) => park.id)
   park: Park;
-  @OneToOne(() => Car, (car) => car.id)
+  @ManyToOne(() => Car, (car) => car.id)
   car: Car;
 }

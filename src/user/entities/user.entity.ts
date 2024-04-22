@@ -1,8 +1,10 @@
+import { ParkingTransaction } from 'src/parking-transaction/entities/parking-transaction.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 

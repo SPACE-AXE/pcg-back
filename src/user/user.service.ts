@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entity/user.entity';
+import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 
@@ -26,8 +26,8 @@ export class UserService {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  async findOne(id: number) {
-    return await this.userRepository.findOne({ where: { id } });
+  async findOne(user: User) {
+    return await this.userRepository.findOne({ where: { id: user.id } });
   }
 
   async findOneByUserName(username: string) {
