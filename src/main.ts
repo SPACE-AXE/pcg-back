@@ -5,6 +5,7 @@ import expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
+import { AccessToken, RefreshToken } from './constants/constants';
 
 const documentEndpoint = process.env.SWAGGER_ENDPOINT;
 
@@ -38,21 +39,19 @@ async function bootstrap() {
     .setTitle('박차고 API')
     .setDescription('박차고 API 문서입니다.')
     .setVersion('0.0.1')
-    .addBearerAuth(
+    .addCookieAuth(
+      AccessToken,
       {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'Token',
+        type: 'apiKey',
       },
-      'access-token',
+      AccessToken,
     )
-    .addBearerAuth(
+    .addCookieAuth(
+      RefreshToken,
       {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'Token',
+        type: 'apiKey',
       },
-      'refresh-token',
+      RefreshToken,
     )
     .build();
 
