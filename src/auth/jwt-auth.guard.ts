@@ -19,12 +19,12 @@ export class JwtAuthGuard implements CanActivate {
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest() as Request;
     const response = context.switchToHttp().getResponse() as Response;
-    if (!request.cookies) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
 
     const accessToken = request.cookies['access-token'];
     const refreshToken = request.cookies['refresh-token'];
+
+    if (!accessToken || !refreshToken)
+      throw new UnauthorizedException('Token not found');
 
     try {
       const decodedAccessToken = this.jwtService.verify(accessToken, {
