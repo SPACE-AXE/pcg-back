@@ -25,8 +25,4 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({ description: '생일' })
   birth: Date;
-
-  @IsString()
-  @ApiProperty({ description: '전화번호' })
-  readonly phone: string;
 }
