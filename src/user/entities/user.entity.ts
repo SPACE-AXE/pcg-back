@@ -1,10 +1,10 @@
-import { ParkingTransaction } from 'src/parking-transaction/entities/parking-transaction.entity';
+import { EmailToken } from 'src/auth/entities/email-token.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
+  OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -36,4 +36,7 @@ export class User {
 
   @DeleteDateColumn({ name: 'deleted_at', nullable: false })
   deletedAt: Date;
+
+  @OneToOne(() => EmailToken, (emailToken) => emailToken.id)
+  emailToken: EmailToken;
 }
