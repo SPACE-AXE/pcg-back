@@ -1,9 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import nodemailer from 'nodemailer';
+import { randomBytes } from 'crypto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { EmailToken } from './entities/email-token.entity';
+import { Repository } from 'typeorm';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthService {
@@ -11,7 +17,40 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
+    @InjectRepository(EmailToken)
+    private readonly emailTokenRepository: Repository<EmailToken>,
   ) {}
+
+  async sendResetEmail(body: ResetPasswordDto) {
+    const user = await this.userService.findOneByUserNameAndEmail(body);
+    if (!user) {
+      throw new ConflictException('Username or email is not valid');
+    }
+
+    const transporter = nodemailer.createTransport({
+      service: 'naver',
+      host: 'smtp.naver.com', // SMTP 서버명
+      port: 465, // SMTP 포트
+      auth: {
+        user: this.configService.get('MAIL_USER'),
+        pass: this.configService.get('MAIL_PASSWORD'),
+      },
+    });
+
+    const token = randomBytes(10).toString('hex');
+
+    const mailResult = await transporter.sendMail({
+      from: this.configService.get('MAIL_USER'),
+      to: body.email,
+      subject: '[박차고] 비밀번호 찾기',
+      html: `<p>비밀번호 재설정을 위한 코드는 ${token} 입니다. 이 코드는 5분간 유효합니다.</p>`,
+    });
+
+    const newEmailToken = this.emailTokenRepository.create({ token, user });
+    await this.emailTokenRepository.insert(newEmailToken);
+
+    return mailResult;
+  }
 
   async validateUser(username: string, password: string) {
     const user = await this.userService.findOneByUserName(username);
