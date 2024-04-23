@@ -82,6 +82,7 @@ export class AuthController {
   @ApiBody({ type: FindUsernameDto })
   @ApiOkResponse({ description: '아이디 조회 성공' })
   @ApiConflictResponse({ description: '사용자 없음' })
+  @HttpCode(200)
   async findUsername(@Body() body: FindUsernameDto) {
     return (await this.userService.findOneByNameAndEmail(body)).username;
   }
@@ -91,6 +92,7 @@ export class AuthController {
   @ApiBody({ type: ResetPasswordDto })
   @ApiOkResponse({ description: '비밀번호 초기화 성공' })
   @ApiConflictResponse({ description: '사용자 없음' })
+  @HttpCode(200)
   async resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.sendResetEmail(body);
   }
