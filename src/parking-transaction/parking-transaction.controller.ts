@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, UseGuards, Req } from '@nestjs/common';
 import { ParkingTransactionService } from './parking-transaction.service';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
 import {
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOperation,
   ApiTags,
@@ -11,10 +11,12 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { ParkingTransaction } from './entities/parking-transaction.entity';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 
 @Controller('parking-transaction')
 @ApiTags('입출차 내역')
-@ApiBearerAuth()
+@ApiCookieAuth(AccessToken)
+@ApiCookieAuth(RefreshToken)
 @UseGuards(JwtAuthGuard)
 @ApiUnauthorizedResponse({ description: '토큰 만료' })
 export class ParkingTransactionController {

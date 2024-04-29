@@ -12,7 +12,7 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
+  ApiCookieAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -21,10 +21,12 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request } from 'express';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 
 @Controller('car')
 @ApiTags('차량')
-@ApiBearerAuth()
+@ApiCookieAuth(AccessToken)
+@ApiCookieAuth(RefreshToken)
 @UseGuards(JwtAuthGuard)
 @ApiBadRequestResponse({ description: '입력값 오류' })
 @ApiUnauthorizedResponse({ description: '토큰 만료' })

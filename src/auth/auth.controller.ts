@@ -27,6 +27,9 @@ import { User } from 'src/user/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { FindUsernameDto } from './dto/find-username.dto';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -49,8 +52,8 @@ export class AuthController {
     const userData = req.user as User;
     const { user, ...tokens } = await this.authService.login(userData);
     res
-      .cookie('access-token', tokens.accessToken, { httpOnly: true })
-      .cookie('refresh-token', tokens.refreshToken, { httpOnly: true })
+      .cookie(AccessToken, tokens.accessToken, { httpOnly: true })
+      .cookie(RefreshToken, tokens.refreshToken, { httpOnly: true })
       .send(user);
   }
 
@@ -72,5 +75,25 @@ export class AuthController {
     const user = await this.userService.findOneByUserName(username);
     if (!user) return;
     else throw new ConflictException('Username already exists');
+  }
+
+  @Post('find-username')
+  @ApiOperation({ summary: '아이디 찾기' })
+  @ApiBody({ type: FindUsernameDto })
+  @ApiOkResponse({ description: '아이디 조회 성공' })
+  @ApiConflictResponse({ description: '사용자 없음' })
+  @HttpCode(200)
+  async findUsername(@Body() body: FindUsernameDto) {
+    return (await this.userService.findOneByNameAndEmail(body)).username;
+  }
+
+  @Post('send-password-reset-email')
+  @ApiOperation({ summary: '비밀번호 초기화' })
+  @ApiBody({ type: ResetPasswordDto })
+  @ApiOkResponse({ description: '비밀번호 초기화 성공' })
+  @ApiConflictResponse({ description: '사용자 없음' })
+  @HttpCode(200)
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    return this.authService.sendResetEmail(body);
   }
 }

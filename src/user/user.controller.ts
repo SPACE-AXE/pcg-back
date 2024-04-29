@@ -4,9 +4,9 @@ import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBadRequestResponse,
-  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
+  ApiCookieAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -16,10 +16,12 @@ import { User } from './entities/user.entity';
 import { UpdateResult } from 'typeorm';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 
 @Controller('user')
 @ApiTags('사용자')
-@ApiBearerAuth()
+@ApiCookieAuth(AccessToken)
+@ApiCookieAuth(RefreshToken)
 @UseGuards(JwtAuthGuard)
 @ApiUnauthorizedResponse({ description: '토큰 만료' })
 @ApiBadRequestResponse({ description: '입력값 오류' })
