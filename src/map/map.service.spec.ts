@@ -18,7 +18,25 @@ describe('MapService', () => {
     expect(service).toBeDefined();
   });
 
-  it('', async () => {
-    expect(await service.getPublicPark(128.406284, 36.112765)).toBeDefined();
+  it('getPublicPark', async () => {
+    expect(
+      await service.getPublicPark({
+        lat: 128.406284,
+        lng: 36.112765,
+        price: 100000,
+        space: 10,
+        disabled: 'Y',
+      }),
+    ).toBeDefined();
+  });
+
+  it('addrToLatLng', async () => {
+    expect(
+      await service.addrToLatLng('경상북도 구미시 광평동 50'),
+    ).toBeDefined();
+  });
+
+  it('getParkInfo', async () => {
+    expect(await service.getParkInfo('비산동사무소')).toBeDefined();
   });
 });

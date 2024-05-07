@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsNumber, Max, Min } from 'class-validator';
+import { IsBoolean, IsNumber, IsString, Max, Min } from 'class-validator';
 
 export class MapBodyDto {
   @Type(() => Number)
@@ -23,9 +23,9 @@ export class MapBodyDto {
   @ApiProperty({ description: '주차 구획 수' })
   space: number;
 
-  @Type(() => Boolean)
-  @IsBoolean()
-  @Transform(({ value }) => value === 'true')
+  @Type(() => String)
+  @IsString()
+  // @Transform(({ value }) => value === 'true')
   @ApiProperty({ description: '장애인 여부' })
-  disabled: Boolean;
+  disabled: String;
 }
