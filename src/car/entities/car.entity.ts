@@ -9,6 +9,6 @@ export class Car {
   @Column({ length: 15, name: 'car_num', unique: true })
   carNum: string;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { nullable: true })
   user: User;
 }

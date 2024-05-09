@@ -5,27 +5,30 @@ export class Park {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ length: 50, nullable: false })
+  @Column({ length: 50 })
   name: string;
 
   @Column({ length: 15, unique: true })
   phone: string;
 
-  @Column({ length: 100, nullable: false })
+  @Column({ length: 100 })
   address: string;
 
-  @Column({ name: 'total_space', nullable: false })
+  @Column({ name: 'total_space' })
   totalSpace: number;
 
-  @Column({ name: 'car_space', nullable: false, default: 0 })
+  @Column({ name: 'car_space', default: 0 })
   carSpace: number;
 
   @Column({ name: 'disability_space' })
   disabilitySpace: number;
 
-  @Column({ name: 'manage_code', length: 100, nullable: false })
+  @Column({ name: 'manage_code', length: 100 })
   manageCode: string;
 
-  @Column({ type: 'point', nullable: false })
+  @Column({ type: 'point' })
   location: Point;
+
+  @Column({ length: 20 })
+  ip: string;
 }
