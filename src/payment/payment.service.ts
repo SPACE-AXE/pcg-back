@@ -1,10 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
+import { User } from 'src/user/entities/user.entity';
+import { AddCreditCardDto } from './dto/add-credit-card.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Card } from './entities/card.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PaymentService {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(
+    private readonly configService: ConfigService,
+    @InjectRepository(Card) private readonly cardRepository: Repository<Card>,
+  ) {}
   async pay() {
     const url = 'https://api.portone.io';
     const paymentId = crypto.randomUUID();
@@ -15,9 +23,9 @@ export class PaymentService {
         method: {
           card: {
             credential: {
-              number: '5461117300743286',
-              expiryYear: '27',
-              expiryMonth: '11',
+              number: '',
+              expiryYear: '',
+              expiryMonth: '',
             },
           },
         },
@@ -35,5 +43,14 @@ export class PaymentService {
     );
 
     return pay.data;
+  }
+
+  addCreditCard(user: User, addCreditCardDto: AddCreditCardDto) {
+    const newCard = this.cardRepository.create({
+      user,
+      ...addCreditCardDto,
+    });
+
+    return this.cardRepository.insert(newCard);
   }
 }
