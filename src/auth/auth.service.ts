@@ -9,6 +9,7 @@ import { randomBytes } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailToken } from './entities/email-token.entity';
 import { Repository } from 'typeorm';
+import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
@@ -21,7 +22,7 @@ export class AuthService {
     private readonly emailTokenRepository: Repository<EmailToken>,
   ) {}
 
-  async sendResetEmail(body: ResetPasswordDto) {
+  async sendResetEmail(body: ResetEmailDto) {
     const user = await this.userService.findOneByUserNameAndEmail(body);
     if (!user) {
       throw new ConflictException('Username or email is not valid');
@@ -50,6 +51,26 @@ export class AuthService {
     await this.emailTokenRepository.insert(newEmailToken);
 
     return mailResult;
+  }
+
+  async resetPassword(body: ResetPasswordDto) {
+    const emailToken = await this.emailTokenRepository.findOne({
+      where: { token: body.token },
+    });
+
+    if (
+      !emailToken ||
+      emailToken.createdAt.getTime() + 300 < Date.now() //TTL 5분이 초과되었을 경우
+    ) {
+      await this.emailTokenRepository.delete(emailToken.id);
+      throw new ConflictException('Token is not valid');
+    }
+
+    await this.emailTokenRepository.delete(emailToken.id);
+
+    return await this.userService.update(emailToken.user.id, {
+      password: bcrypt.hashSync(body.password, 10),
+    });
   }
 
   async validateUser(username: string, password: string) {

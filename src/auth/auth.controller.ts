@@ -5,6 +5,7 @@ import {
   Get,
   HttpCode,
   Param,
+  Patch,
   Post,
   Req,
   Res,
@@ -29,6 +30,7 @@ import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { FindUsernameDto } from './dto/find-username.dto';
+import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Controller('auth')
@@ -88,12 +90,24 @@ export class AuthController {
   }
 
   @Post('send-password-reset-email')
-  @ApiOperation({ summary: '비밀번호 초기화' })
-  @ApiBody({ type: ResetPasswordDto })
-  @ApiOkResponse({ description: '비밀번호 초기화 성공' })
+  @ApiOperation({
+    summary: '비밀번호 초기화 이메일 발송',
+    description:
+      '토큰의 TTL은 5분입니다. 200 OK 응답이 반환되면, 이메일 발송에 성공한 것이므로 이메일을 확인해달라는 팝업과 함께 토큰/비밀번호/비밀번호 확인 텍스트를 받는 페이지로 리다이렉트하면 됩니다.',
+  })
+  @ApiBody({ type: ResetEmailDto })
+  @ApiOkResponse({ description: '비밀번호 변경을 위한 토큰 발급(이메일)' })
   @ApiConflictResponse({ description: '사용자 없음' })
   @HttpCode(200)
-  async resetPassword(@Body() body: ResetPasswordDto) {
+  async sendResetEmail(@Body() body: ResetEmailDto) {
     return this.authService.sendResetEmail(body);
+  }
+
+  @Patch('reset-password')
+  @ApiOperation({ summary: '비밀번호 변경' })
+  @ApiOkResponse({ description: '비밀번호 변경 성공' })
+  @ApiConflictResponse({ description: '토큰 불일치 또는 토큰 만료' })
+  async resetPassword(@Body() body: ResetPasswordDto) {
+    return this.authService.resetPassword(body);
   }
 }
