@@ -1,8 +1,8 @@
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsString } from 'class-validator';
 
 export class CreateParkingTransactionDto {
   @IsNumber()
   parkId: number;
-  @IsNumber()
-  carId: number;
+  @IsString()
+  carNum: string;
 }

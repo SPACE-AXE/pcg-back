@@ -7,7 +7,7 @@ import { User } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { FindUsernameDto } from 'src/auth/dto/find-username.dto';
-import { ResetPasswordDto } from 'src/auth/dto/reset-password.dto';
+import { ResetEmailDto } from 'src/auth/dto/reset-email.dto';
 
 @Injectable()
 export class UserService {
@@ -28,7 +28,7 @@ export class UserService {
     else throw new ConflictException('User not found');
   }
 
-  async findOneByUserNameAndEmail(body: ResetPasswordDto) {
+  async findOneByUserNameAndEmail(body: ResetEmailDto) {
     const user = await this.userRepository.findOne({
       where: { username: body.username, email: body.email },
     });
