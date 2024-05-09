@@ -1,9 +1,11 @@
 import { EmailToken } from 'src/auth/entities/email-token.entity';
+import { Card } from 'src/payment/entities/card.entity';
 import {
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -39,4 +41,7 @@ export class User {
 
   @OneToOne(() => EmailToken, (emailToken) => emailToken.id)
   emailToken: EmailToken;
+
+  @OneToMany(() => Card, (card) => card.user)
+  cards: Card[];
 }
