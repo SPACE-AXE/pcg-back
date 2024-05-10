@@ -11,6 +11,7 @@ import { SocketModule } from './socket/socket.module';
 import { ParkModule } from './park/park.module';
 import { CarModule } from './car/car.module';
 import { ParkingTransactionModule } from './parking-transaction/parking-transaction.module';
+import { PaymentModule } from './payment/payment.module';
 import { MapModule } from './map/map.module';
 
 @Module({
@@ -32,6 +33,7 @@ import { MapModule } from './map/map.module';
     ParkModule,
     CarModule,
     ParkingTransactionModule,
+    PaymentModule,
     MapModule,
   ],
   controllers: [AppController],

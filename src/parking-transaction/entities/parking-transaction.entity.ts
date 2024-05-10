@@ -23,7 +23,7 @@ export class ParkingTransaction {
   chargeAmount: number;
   @Column({ type: 'int', nullable: true })
   amount: number;
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.id, { nullable: true })
   user: User;
   @ManyToOne(() => Park, (park) => park.id)
   park: Park;
