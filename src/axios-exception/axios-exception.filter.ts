@@ -10,7 +10,6 @@ export class AxiosExceptionFilter implements ExceptionFilter {
 
     response.status(status).json({
       statusCode: status,
-      timestamp: new Date().toISOString(),
       message: exception.response?.data,
     });
   }

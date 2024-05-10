@@ -1,5 +1,5 @@
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('card')
 export class Card {
@@ -11,6 +11,6 @@ export class Card {
   expiryYear: string;
   @Column({ length: 2, name: 'expiry_month' })
   expiryMonth: string;
-  @ManyToOne(() => User, (user) => user.cards)
+  @OneToOne(() => User, (user) => user.card)
   user: User;
 }
