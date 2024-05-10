@@ -6,6 +6,7 @@ import helmet from 'helmet';
 import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { AccessToken, RefreshToken } from './constants/constants';
+import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
 
 const documentEndpoint = process.env.SWAGGER_ENDPOINT;
 
@@ -24,6 +25,7 @@ async function bootstrap() {
       transform: true,
     }),
   );
+  app.useGlobalFilters(new AxiosExceptionFilter());
   process.env.NODE_ENV === 'production'
     ? app.use(
         [documentEndpoint],

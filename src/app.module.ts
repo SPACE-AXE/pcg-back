@@ -12,6 +12,7 @@ import { ParkModule } from './park/park.module';
 import { CarModule } from './car/car.module';
 import { ParkingTransactionModule } from './parking-transaction/parking-transaction.module';
 import { PaymentModule } from './payment/payment.module';
+import { MapModule } from './map/map.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PaymentModule } from './payment/payment.module';
     CarModule,
     ParkingTransactionModule,
     PaymentModule,
+    MapModule,
   ],
   controllers: [AppController],
   providers: [AppService],
