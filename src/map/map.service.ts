@@ -11,10 +11,11 @@ export class MapService {
   constructor(private readonly configService: ConfigService) {}
 
   async getPublicPark(mapBodyDto: MapBodyDto) {
+    console.log(mapBodyDto.lat, mapBodyDto.lng);
     const addr = await axios.get(
-      `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?request=coordsToaddr&coords=${mapBodyDto.lng},${mapBodyDto.lat}&sourcecrs=epsg:4326&output=json&orders=roadaddr&output=json`,
+      `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${mapBodyDto.lng},${mapBodyDto.lat}&output=json&orders=roadaddr&output=json`,
       {
-        params: {
+        headers: {
           'X-NCP-APIGW-API-KEY-ID': this.configService.get('NAVER_MAP_ID'),
           'X-NCP-APIGW-API-KEY': this.configService.get('NAVER_MAP_SECRET'),
         },
@@ -30,7 +31,6 @@ export class MapService {
     });
 
     const organizationCodes = matchingData.map((item) => item['제공기관코드']);
-
     try {
       const responses = await Promise.all(
         organizationCodes.map(async (code) => {
@@ -44,16 +44,6 @@ export class MapService {
       });
       const newItems = [].concat(...items);
 
-      console.log(mapBodyDto.disabled, mapBodyDto.price, mapBodyDto.space);
-
-      newItems.map((a) => {
-        console.log(
-          a.prkplceNm,
-          a.pwdbsPpkZoneYn,
-          a.basicCharge,
-          typeof a.prkcmprt,
-        );
-      });
       const priceFilter = newItems.filter((item) => {
         if (
           item.basicCharge === '' ||
@@ -81,31 +71,6 @@ export class MapService {
           return item;
         }
       });
-      // const filteredItems = newItems.filter((item) => {
-      //   if (
-      //     parseInt(item.basicCharge) <= mapBodyDto.price &&
-      //     parseInt(item.prkcmprt) <= mapBodyDto.space
-      //   ) {
-      //     return item;
-      //   }
-      // });
-
-      // const _filteredItems = [];
-
-      // filteredItems.forEach((item) => {
-      //   if (mapBodyDto.disabled === 'Y') {
-      //     // disabled가 'Y'이면서 pwdbsPpkZoneYn이 'Y'인 항목을 필터링합니다.
-      //     if (item.pwdbsPpkZoneYn === 'Y') {
-      //       _filteredItems.push(item);
-      //     }
-      //   } else if (mapBodyDto.disabled === 'N') {
-      //     // disabled가 'N'이면서 다른 조건에 상관없이 모든 항목을 필터링합니다.
-      //     _filteredItems.push(item);
-      //   }
-      // });
-      // console.log(_filteredItems);
-      // console.log(newItems[0]);
-      // console.log(filteredItems[0]);
       return filteredItems;
     } catch (error) {
       throw new Error(`Failed to fetch data from API: ${error}`);
@@ -128,12 +93,24 @@ export class MapService {
     return response.data.addresses[0];
   }
 
-  async placeToLatLng(place: String) {}
+  async placeToLatLng(place: String) {
+    const response = await axios.get(
+      `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${this.configService.get<string>('GET_ADDR_KEY')}`,
+      {
+        params: {
+          currentPAge: 1,
+          countPerPage: 1,
+          keyword: place,
+          resultType: 'json',
+        },
+      },
+    );
+    return await this.addrToLatLng(response.data.results.juso[0].roadAddrPart1);
+  }
 
   async getParkInfo(name: String) {
     const apiUrl = `http://api.data.go.kr/openapi/tn_pubr_prkplce_info_api?serviceKey=${this.configService.get('PUBLIC_DATA_ID')}&pageNo=1&numOfRows=100&type=json&prkplceNm=${name}`;
     const response = await axios.get(apiUrl);
-    console.log(response.data.response.body.items[0]);
     const data = response.data.response.body.items[0];
 
     const time = {

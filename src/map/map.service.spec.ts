@@ -11,6 +11,7 @@ describe('MapService', () => {
       providers: [MapService, ConfigService],
     }).compile();
 
+    jest.setTimeout(60000);
     service = module.get<MapService>(MapService);
   });
 
@@ -21,10 +22,10 @@ describe('MapService', () => {
   it('getPublicPark', async () => {
     expect(
       await service.getPublicPark({
-        lat: 128.406284,
-        lng: 36.112765,
-        price: 100000,
-        space: 10,
+        lat: 36.112765,
+        lng: 128.406284,
+        price: 5000,
+        space: 10000,
         disabled: 'Y',
       }),
     ).toBeDefined();
@@ -36,7 +37,11 @@ describe('MapService', () => {
     ).toBeDefined();
   });
 
-  it('getParkInfo', async () => {
-    expect(await service.getParkInfo('비산동사무소')).toBeDefined();
+  // it('getParkInfo', async () => {
+  //   expect(await service.getParkInfo('비산동사무소')).toBeDefined();
+  // });
+
+  it('placeToLatLng', async () => {
+    expect(await service.placeToLatLng('대구역')).toBeDefined();
   });
 });

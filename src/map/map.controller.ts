@@ -5,6 +5,7 @@ import { MapBodyDto } from './dto/map.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { addrDto } from './dto/addr.dto';
 import { ParkInfoDto } from './dto/parkInfo.dto';
+import { placeDto } from './dto/place.dto';
 
 @Controller('map')
 @ApiTags('지도')
@@ -34,5 +35,11 @@ export class MapController {
   @ApiOperation({ summary: '주차장 상세 정보 반환' })
   async getParkInfo(@Query() query: ParkInfoDto) {
     return await this.mapService.getParkInfo(query.name);
+  }
+
+  @Get('place')
+  @ApiOperation({ summary: '장소이름 to 위경도' })
+  async placeToLatLng(@Query() query: placeDto) {
+    return await this.mapService.placeToLatLng(query.place);
   }
 }
