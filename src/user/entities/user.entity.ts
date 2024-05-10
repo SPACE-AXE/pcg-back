@@ -5,7 +5,6 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -42,6 +41,6 @@ export class User {
   @OneToOne(() => EmailToken, (emailToken) => emailToken.id)
   emailToken: EmailToken;
 
-  @OneToMany(() => Card, (card) => card.user)
-  cards: Card[];
+  @OneToOne(() => Card, (card) => card.user)
+  card: Card;
 }
