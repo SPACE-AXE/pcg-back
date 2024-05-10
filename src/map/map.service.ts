@@ -58,16 +58,18 @@ export class MapService {
         if (
           item.basicCharge === '' ||
           parseInt(item.basicCharge) <= mapBodyDto.price
-        )
+        ) {
           return item;
+        }
       });
 
       const spaceFilter = priceFilter.filter((item) => {
         if (
           item.prkcmprt === undefined ||
           parseInt(item.prkcmprt) <= mapBodyDto.space
-        )
+        ) {
           return item;
+        }
       });
 
       const filteredItems = spaceFilter.filter((item) => {
@@ -75,7 +77,9 @@ export class MapService {
           if (item.pwdbsPpkZoneYn === 'Y') {
             return item;
           }
-        } else if (mapBodyDto.disabled === 'N') return item;
+        } else if (mapBodyDto.disabled === 'N') {
+          return item;
+        }
       });
       // const filteredItems = newItems.filter((item) => {
       //   if (
@@ -123,6 +127,8 @@ export class MapService {
     );
     return response.data.addresses[0];
   }
+
+  async placeToLatLng(place: String) {}
 
   async getParkInfo(name: String) {
     const apiUrl = `http://api.data.go.kr/openapi/tn_pubr_prkplce_info_api?serviceKey=${this.configService.get('PUBLIC_DATA_ID')}&pageNo=1&numOfRows=100&type=json&prkplceNm=${name}`;
