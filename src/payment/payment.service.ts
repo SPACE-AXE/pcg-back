@@ -75,7 +75,7 @@ export class PaymentService {
 
   async addCreditCard(user: User, addCreditCardDto: AddCreditCardDto) {
     const card = await this.cardRepository.findOne({
-      where: { user: { id: user.id } },
+      where: { number: addCreditCardDto.number },
     });
     if (card) throw new ConflictException('Card already exists');
     const newCard = this.cardRepository.create({
