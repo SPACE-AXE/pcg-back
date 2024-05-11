@@ -1,4 +1,5 @@
 import { EmailToken } from 'src/auth/entities/email-token.entity';
+import { Card } from 'src/payment/entities/card.entity';
 import {
   Column,
   CreateDateColumn,
@@ -39,4 +40,7 @@ export class User {
 
   @OneToOne(() => EmailToken, (emailToken) => emailToken.id)
   emailToken: EmailToken;
+
+  @OneToOne(() => Card, (card) => card.user)
+  card: Card;
 }
