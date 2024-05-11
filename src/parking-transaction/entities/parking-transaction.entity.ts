@@ -5,6 +5,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -24,9 +25,12 @@ export class ParkingTransaction {
   @Column({ type: 'int', nullable: true })
   amount: number;
   @ManyToOne(() => User, (user) => user.id, { nullable: true })
+  @JoinColumn({ name: 'user_id' })
   user: User;
   @ManyToOne(() => Park, (park) => park.id)
+  @JoinColumn({ name: 'park_id' })
   park: Park;
   @ManyToOne(() => Car, (car) => car.id)
+  @JoinColumn({ name: 'car_id' })
   car: Car;
 }
