@@ -5,12 +5,16 @@ import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
 export class Card {
   @PrimaryGeneratedColumn()
   id: number;
+
   @Column({ length: 30, unique: true })
   number: string;
+
   @Column({ length: 2, name: 'expiry_year' })
   expiryYear: string;
+
   @Column({ length: 2, name: 'expiry_month' })
   expiryMonth: string;
-  @OneToOne(() => User, (user) => user.card)
+
+  @OneToOne(() => User, (user) => user.id)
   user: User;
 }
