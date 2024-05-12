@@ -53,10 +53,6 @@ export class UserService {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  async findOneByUser(user: User) {
-    return await this.userRepository.findOne({ where: { id: user.id } });
-  }
-
   async findOneByUserName(username: string) {
     return await this.userRepository.findOne({ where: { username } });
   }
