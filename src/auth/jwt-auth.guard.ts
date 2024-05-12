@@ -32,7 +32,7 @@ export class JwtAuthGuard implements CanActivate {
       const decodedAccessToken = this.jwtService.verify(accessToken, {
         secret: this.configService.get('JWT_SECRET'),
       });
-      const user = await this.userService.findOne(decodedAccessToken.id);
+      const user = await this.userService.findOneById(decodedAccessToken.id);
       request.user = user;
       return true;
     } catch (accessTokenError) {
@@ -40,7 +40,7 @@ export class JwtAuthGuard implements CanActivate {
         const decodedRefreshToken = this.jwtService.verify(refreshToken, {
           secret: this.configService.get('JWT_SECRET'),
         });
-        const user = await this.userService.findOne(decodedRefreshToken.id);
+        const user = await this.userService.findOneById(decodedRefreshToken.id);
         const newAccessToken = this.jwtService.sign(
           {
             username: decodedRefreshToken.username,
