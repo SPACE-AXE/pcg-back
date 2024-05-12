@@ -41,7 +41,7 @@ export class UserService {
     createUserDto.birth = new Date(createUserDto.birth);
     this.hashPassword(createUserDto);
     const newUser = this.userRepository.create(createUserDto);
-    return await this.userRepository.save(newUser);
+    return await this.userRepository.insert(newUser);
   }
 
   hashPassword(createUserDto: CreateUserDto) {

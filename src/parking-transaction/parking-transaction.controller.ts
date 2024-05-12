@@ -27,14 +27,8 @@ export class ParkingTransactionController {
     description: '입차 내역 기록 성공',
     type: ParkingTransaction,
   })
-  create(
-    @Req() req: Request,
-    @Body() createParkingTransactionDto: CreateParkingTransactionDto,
-  ) {
-    return this.parkingTransactionService.create(
-      req.user,
-      createParkingTransactionDto,
-    );
+  create(@Body() createParkingTransactionDto: CreateParkingTransactionDto) {
+    return this.parkingTransactionService.create(createParkingTransactionDto);
   }
 
   @Get()
