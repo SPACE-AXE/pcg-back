@@ -17,7 +17,7 @@ export class ParkingTransactionService {
     createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     const newParkingTransaction = this.parkingTransactionRepository.create({
-      user: { id: user.id },
+      user: { id: user ? user.id : null },
       car: { carNum: createParkingTransactionDto.carNum },
       park: { id: createParkingTransactionDto.parkId },
     });
