@@ -13,10 +13,10 @@ export class CarService {
 
   async create(user: User, createCarDto: CreateCarDto) {
     const newCar = this.carRepository.create({
-      user,
+      user: { id: user.id },
       carNum: createCarDto.carNum,
     });
-    return await this.carRepository.save(newCar);
+    return await this.carRepository.insert(newCar);
   }
 
   findOne(user: User) {
@@ -25,7 +25,7 @@ export class CarService {
     });
   }
 
-  remove(id: number, user: User) {
+  async remove(id: number, user: User) {
     return this.carRepository.delete({ id, user });
   }
 }
