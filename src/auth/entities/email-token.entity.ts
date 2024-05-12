@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  JoinColumn,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -20,6 +19,5 @@ export class EmailToken {
   createdAt: Date;
 
   @OneToOne(() => User, (user) => user.id)
-  @JoinColumn({ name: 'user_id' })
   user: User;
 }
