@@ -22,7 +22,7 @@ export class ParkingTransactionService {
       park: { id: createParkingTransactionDto.parkId },
     });
 
-    return this.parkingTransactionRepository.save(newParkingTransaction);
+    return this.parkingTransactionRepository.insert(newParkingTransaction);
   }
 
   findAll(user: User) {
