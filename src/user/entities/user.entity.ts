@@ -38,7 +38,7 @@ export class User {
   @DeleteDateColumn({ name: 'deleted_at', nullable: false })
   deletedAt: Date;
 
-  @OneToOne(() => EmailToken, (emailToken) => emailToken.id)
+  @OneToOne(() => EmailToken, (emailToken) => emailToken.user)
   emailToken: EmailToken;
 
   @OneToOne(() => Card, (card) => card.user)

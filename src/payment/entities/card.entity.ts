@@ -1,5 +1,11 @@
 import { User } from 'src/user/entities/user.entity';
-import { Column, Entity, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity('card')
 export class Card {
@@ -16,5 +22,6 @@ export class Card {
   expiryMonth: string;
 
   @OneToOne(() => User, (user) => user.card)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
