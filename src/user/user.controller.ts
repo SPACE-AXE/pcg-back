@@ -32,7 +32,7 @@ export class UserController {
   @ApiOperation({ summary: '유저 정보 조회' })
   @ApiOkResponse({ description: '유저 정보 반환', type: User })
   findOne(@Req() req: Request) {
-    return this.userService.findOne(req.user);
+    return this.userService.findOneByUser(req.user);
   }
 
   @Patch()

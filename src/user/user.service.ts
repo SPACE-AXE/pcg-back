@@ -16,9 +16,9 @@ export class UserService {
     private readonly configService: ConfigService,
   ) {}
 
-  async findOneByNameAndEmail(body: FindUsernameDto) {
+  async findOneByNameAndEmail(findUsernameDto: FindUsernameDto) {
     const user = await this.userRepository.findOne({
-      where: { name: body.name, email: body.email },
+      where: { name: findUsernameDto.name, email: findUsernameDto.email },
       select: {
         username: true,
       },
@@ -28,9 +28,9 @@ export class UserService {
     else throw new ConflictException('User not found');
   }
 
-  async findOneByUserNameAndEmail(body: ResetEmailDto) {
+  async findOneByUserNameAndEmail(resetEmailDto: ResetEmailDto) {
     const user = await this.userRepository.findOne({
-      where: { username: body.username, email: body.email },
+      where: { username: resetEmailDto.username, email: resetEmailDto.email },
     });
 
     if (user) return user;
@@ -53,11 +53,15 @@ export class UserService {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  async findOne(user: User) {
+  async findOneByUser(user: User) {
     return await this.userRepository.findOne({ where: { id: user.id } });
   }
 
   async findOneByUserName(username: string) {
     return await this.userRepository.findOne({ where: { username } });
+  }
+
+  async findOneById(id: number) {
+    return await this.userRepository.findOneBy({ id });
   }
 }
