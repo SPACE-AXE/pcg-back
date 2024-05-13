@@ -11,7 +11,7 @@ export class TypeormExceptionFilter implements ExceptionFilter {
     if (exception.message.includes('Duplicate entry')) {
       response.status(409).json({
         statusCode: 409,
-        message: 'Card already exists',
+        message: exception.message,
       });
     } else {
       response.status(500).json({

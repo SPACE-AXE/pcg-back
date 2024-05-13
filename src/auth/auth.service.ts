@@ -1,4 +1,8 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { UserService } from 'src/user/user.service';
 import bcrypt from 'bcrypt';
 import { User } from 'src/user/entities/user.entity';
@@ -25,7 +29,7 @@ export class AuthService {
   async sendResetEmail(body: ResetEmailDto) {
     const user = await this.userService.findOneByUserNameAndEmail(body);
     if (!user) {
-      throw new ConflictException('Username or email is not valid');
+      throw new NotFoundException('Username or email is not valid');
     }
 
     const transporter = nodemailer.createTransport({
@@ -63,7 +67,7 @@ export class AuthService {
       emailToken.createdAt.getTime() + 300 < Date.now() //TTL 5분이 초과되었을 경우
     ) {
       await this.emailTokenRepository.delete(emailToken.id);
-      throw new ConflictException('Token is not valid');
+      throw new UnauthorizedException('Token is not valid');
     }
 
     await this.emailTokenRepository.delete(emailToken.id);

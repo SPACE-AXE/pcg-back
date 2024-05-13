@@ -1,5 +1,4 @@
 import {
-  ConflictException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -74,10 +73,6 @@ export class PaymentService {
   }
 
   async addCreditCard(user: User, addCreditCardDto: AddCreditCardDto) {
-    const card = await this.cardRepository.findOne({
-      where: { number: addCreditCardDto.number },
-    });
-    if (card) throw new ConflictException('Card already exists');
     const newCard = this.cardRepository.create({
       user,
       ...addCreditCardDto,
