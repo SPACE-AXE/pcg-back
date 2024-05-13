@@ -1,4 +1,4 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ export class UserService {
     });
 
     if (user) return user;
-    else throw new ConflictException('User not found');
+    else throw new NotFoundException('User not found');
   }
 
   async findOneByUserNameAndEmail(resetEmailDto: ResetEmailDto) {
@@ -34,7 +34,7 @@ export class UserService {
     });
 
     if (user) return user;
-    else throw new ConflictException('User not found');
+    else throw new NotFoundException('User not found');
   }
 
   async create(createUserDto: CreateUserDto) {

@@ -18,6 +18,7 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
@@ -83,7 +84,7 @@ export class AuthController {
   @ApiOperation({ summary: '아이디 찾기' })
   @ApiBody({ type: FindUsernameDto })
   @ApiOkResponse({ description: '아이디 조회 성공' })
-  @ApiConflictResponse({ description: '사용자 없음' })
+  @ApiNotFoundResponse({ description: '사용자 없음' })
   @HttpCode(200)
   async findUsername(@Body() body: FindUsernameDto) {
     return (await this.userService.findOneByNameAndEmail(body)).username;
@@ -97,7 +98,7 @@ export class AuthController {
   })
   @ApiBody({ type: ResetEmailDto })
   @ApiOkResponse({ description: '비밀번호 변경을 위한 토큰 발급(이메일)' })
-  @ApiConflictResponse({ description: '사용자 없음' })
+  @ApiNotFoundResponse({ description: '사용자 없음' })
   @HttpCode(200)
   async sendResetEmail(@Body() body: ResetEmailDto) {
     return this.authService.sendResetEmail(body);
@@ -106,7 +107,7 @@ export class AuthController {
   @Patch('reset-password')
   @ApiOperation({ summary: '비밀번호 변경' })
   @ApiOkResponse({ description: '비밀번호 변경 성공' })
-  @ApiConflictResponse({ description: '토큰 불일치 또는 토큰 만료' })
+  @ApiUnauthorizedResponse({ description: '토큰 불일치 또는 토큰 만료' })
   async resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body);
   }
