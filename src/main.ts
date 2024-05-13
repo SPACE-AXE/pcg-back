@@ -7,6 +7,7 @@ import { ValidationPipe } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { AccessToken, RefreshToken } from './constants/constants';
 import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
+import { TypeormExceptionFilter } from './typeorm-exception/typeorm-exception.filter';
 
 const documentEndpoint = process.env.SWAGGER_ENDPOINT;
 
@@ -26,6 +27,7 @@ async function bootstrap() {
     }),
   );
   app.useGlobalFilters(new AxiosExceptionFilter());
+  app.useGlobalFilters(new TypeormExceptionFilter());
   process.env.NODE_ENV === 'production'
     ? app.use(
         [documentEndpoint],
