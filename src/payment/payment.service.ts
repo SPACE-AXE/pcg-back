@@ -95,7 +95,9 @@ export class PaymentService {
       },
     });
 
-    card.number = `${card.number.slice(0, 4)}-XXXX-XXXX-${card.number.slice(12)}`;
+    card
+      ? (card.number = `${card.number.slice(0, 4)}-XXXX-XXXX-${card.number.slice(12)}`)
+      : undefined;
 
     return card;
   }
