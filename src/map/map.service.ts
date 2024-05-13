@@ -11,7 +11,6 @@ export class MapService {
   constructor(private readonly configService: ConfigService) {}
 
   async getPublicPark(mapBodyDto: MapBodyDto) {
-    console.log(mapBodyDto.lat, mapBodyDto.lng);
     const addr = await axios.get(
       `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${mapBodyDto.lng},${mapBodyDto.lat}&output=json&orders=roadaddr&output=json`,
       {
