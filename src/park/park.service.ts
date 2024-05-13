@@ -42,6 +42,10 @@ export class ParkService {
       delete result.car_space;
       result.disabilitySpace = result.disability_space;
       delete result.disability_space;
+      result.location = {
+        x: result.location.y,
+        y: result.location.x,
+      };
     }
 
     return results as ParkGetResult[];
