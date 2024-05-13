@@ -31,7 +31,7 @@ export class ParkService {
 
   async findByLocation(x: number, y: number) {
     const results = await this.parkRepository.query(
-      `SELECT * FROM park WHERE ST_Distance_Sphere(park.location, Point(${x}, ${y})) <= 5000;`,
+      `SELECT * FROM park WHERE ST_Distance_Sphere(park.location, Point(${y}, ${x})) <= 5000;`,
     );
 
     for (const result of results) {
