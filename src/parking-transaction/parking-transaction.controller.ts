@@ -10,7 +10,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { ParkingTransaction } from './entities/parking-transaction.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 
@@ -25,7 +24,6 @@ export class ParkingTransactionController {
   @ApiOperation({ summary: '입차 내역 기록' })
   @ApiCreatedResponse({
     description: '입차 내역 기록 성공',
-    type: ParkingTransaction,
   })
   create(@Body() createParkingTransactionDto: CreateParkingTransactionDto) {
     return this.parkingTransactionService.create(createParkingTransactionDto);
@@ -38,7 +36,6 @@ export class ParkingTransactionController {
   @ApiCookieAuth(RefreshToken)
   @ApiOkResponse({
     description: '입출차 내역 조회 성공',
-    type: [ParkingTransaction],
   })
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   findAll(@Req() req: Request) {
