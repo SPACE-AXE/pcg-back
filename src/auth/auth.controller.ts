@@ -15,7 +15,6 @@ import { Request, Response } from 'express';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import {
-  ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -26,7 +25,6 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { User } from 'src/user/entities/user.entity';
-import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from 'src/user/dto/create-user.dto';
 import { UserService } from 'src/user/user.service';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
@@ -45,7 +43,6 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: '로그인' })
   @HttpCode(200)
-  @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description: '로그인 성공 (토큰은 쿠키로 발급)',
     type: User,
@@ -62,7 +59,6 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: '회원가입' })
-  @ApiBody({ type: CreateUserDto })
   @ApiCreatedResponse({ description: '회원가입 완료', type: User })
   @ApiConflictResponse({ description: '특정 항목 중복' })
   create(@Body() createUserDto: CreateUserDto) {
@@ -82,7 +78,6 @@ export class AuthController {
 
   @Post('find-username')
   @ApiOperation({ summary: '아이디 찾기' })
-  @ApiBody({ type: FindUsernameDto })
   @ApiOkResponse({ description: '아이디 조회 성공' })
   @ApiNotFoundResponse({ description: '사용자 없음' })
   @HttpCode(200)
@@ -96,7 +91,6 @@ export class AuthController {
     description:
       '토큰의 TTL은 5분입니다. 200 OK 응답이 반환되면, 이메일 발송에 성공한 것이므로 이메일을 확인해달라는 팝업과 함께 토큰/비밀번호/비밀번호 확인 텍스트를 받는 페이지로 리다이렉트하면 됩니다.',
   })
-  @ApiBody({ type: ResetEmailDto })
   @ApiOkResponse({ description: '비밀번호 변경을 위한 토큰 발급(이메일)' })
   @ApiNotFoundResponse({ description: '사용자 없음' })
   @HttpCode(200)
