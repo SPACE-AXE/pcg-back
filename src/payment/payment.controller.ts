@@ -23,6 +23,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { CardResponseDto } from './dto/card-response.dto';
 
 @Controller('payment')
 @UseGuards(JwtAuthGuard)
@@ -58,7 +59,10 @@ export class PaymentController {
 
   @Get('card')
   @ApiOperation({ summary: '신용카드 조회' })
-  @ApiOkResponse({ description: '신용카드 조회 성공' })
+  @ApiOkResponse({
+    description: '신용카드 조회 성공',
+    type: CardResponseDto,
+  })
   getCreditCard(@Req() req: Request) {
     return this.paymentService.getCreditCard(req.user);
   }

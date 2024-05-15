@@ -12,6 +12,7 @@ import {
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
 
 @Controller('parking-transaction')
 @ApiTags('입출차 내역')
@@ -36,6 +37,8 @@ export class ParkingTransactionController {
   @ApiCookieAuth(RefreshToken)
   @ApiOkResponse({
     description: '입출차 내역 조회 성공',
+    type: ParkingTransactionResponseDto,
+    isArray: true,
   })
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   findAll(@Req() req: Request) {
