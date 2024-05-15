@@ -14,6 +14,7 @@ import {
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller('user')
 @ApiTags('사용자')
@@ -27,7 +28,10 @@ export class UserController {
 
   @Get()
   @ApiOperation({ summary: '유저 정보 조회' })
-  @ApiOkResponse({ description: '유저 정보 반환' })
+  @ApiOkResponse({
+    description: '유저 정보 반환',
+    type: UserResponseDto,
+  })
   findOne(@Req() req: Request) {
     return this.userService.findOneById(req.user.id);
   }
