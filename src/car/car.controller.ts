@@ -44,7 +44,7 @@ export class CarController {
   @ApiOperation({ summary: '차량 조회' })
   @ApiOkResponse({ description: '차량 조회 성공' })
   findOne(@Req() req: Request) {
-    return this.carService.findOne(req.user);
+    return this.carService.findAll(req.user);
   }
 
   @Delete(':id')
