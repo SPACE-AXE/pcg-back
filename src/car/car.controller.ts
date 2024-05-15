@@ -22,6 +22,7 @@ import {
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { CarResponseDto } from './dto/car-response.dto';
 
 @Controller('car')
 @ApiTags('차량')
@@ -42,8 +43,12 @@ export class CarController {
 
   @Get()
   @ApiOperation({ summary: '차량 조회' })
-  @ApiOkResponse({ description: '차량 조회 성공' })
-  findOne(@Req() req: Request) {
+  @ApiOkResponse({
+    description: '차량 조회 성공',
+    isArray: true,
+    type: CarResponseDto,
+  })
+  findAll(@Req() req: Request) {
     return this.carService.findAll(req.user);
   }
 
