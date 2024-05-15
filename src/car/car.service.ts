@@ -19,8 +19,8 @@ export class CarService {
     return await this.carRepository.insert(newCar);
   }
 
-  findOne(user: User) {
-    return this.carRepository.findOne({
+  findAll(user: User) {
+    return this.carRepository.find({
       where: { user: { id: user.id } },
     });
   }
