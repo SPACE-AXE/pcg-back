@@ -8,6 +8,8 @@ export class AxiosExceptionFilter implements ExceptionFilter {
     const response = ctx.getResponse();
     const status = exception.response?.status;
 
+    console.error(exception);
+
     response.status(status).json({
       statusCode: status,
       message: exception.response?.data,
