@@ -8,6 +8,8 @@ export class TypeormExceptionFilter implements ExceptionFilter {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
+    console.error(exception);
+
     if (exception.message.includes('Duplicate entry')) {
       response.status(409).json({
         statusCode: 409,
