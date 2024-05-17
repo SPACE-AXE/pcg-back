@@ -17,12 +17,18 @@ export class ParkingTransaction {
   entryTime: Date;
   @Column({ name: 'exit_time', type: 'datetime', nullable: true })
   exitTime: Date;
+  @Column({ name: 'charge_start_time', type: 'datetime', nullable: true })
+  chargeStartTime: Date;
+  @Column({ name: 'charge_time', nullable: true })
+  chargeTime: number;
   @Column({ name: 'payment_time', type: 'datetime', nullable: true })
   paymentTime: Date;
   @Column({ name: 'charge_amount', type: 'int', nullable: true })
   chargeAmount: number;
-  @Column({ type: 'int', nullable: true })
-  amount: number;
+  @Column({ name: 'parking_amount', type: 'int', nullable: true })
+  parkingAmount: number;
+  @Column({ name: 'total_amount', type: 'int', nullable: true })
+  totalAmount: number;
   @ManyToOne(() => User, (user) => user.id, { nullable: true })
   user: User;
   @ManyToOne(() => Park, (park) => park.id)
@@ -31,4 +37,6 @@ export class ParkingTransaction {
   car: Car;
   @Column({ name: 'car_num', length: 15 })
   carNum: string;
+  @Column({ name: 'is_paid', default: false, type: 'tinyint' })
+  isPaid: boolean;
 }

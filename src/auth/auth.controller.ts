@@ -15,6 +15,7 @@ import { Request, Response } from 'express';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import {
+  ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
   ApiNotFoundResponse,
@@ -31,6 +32,7 @@ import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { FindUsernameDto } from './dto/find-username.dto';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -43,6 +45,7 @@ export class AuthController {
   @Post('login')
   @ApiOperation({ summary: '로그인' })
   @HttpCode(200)
+  @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description: '로그인 성공 (토큰은 쿠키로 발급)',
     type: User,
