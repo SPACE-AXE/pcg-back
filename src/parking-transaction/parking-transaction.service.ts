@@ -50,7 +50,7 @@ export class ParkingTransactionService {
       paymentId,
     });
 
-    this.parkingTransactionRepository.insert(newParkingTransaction);
+    await this.parkingTransactionRepository.insert(newParkingTransaction);
 
     return { paymentId };
   }
