@@ -15,6 +15,7 @@ const typeORMConfig: DataSourceOptions = {
   migrations: ['src/migration/*{.ts,.js}'],
   logging: true,
   logger: 'file',
+  timezone: 'local',
 };
 
 const dataSource = new DataSource(typeORMConfig);
