@@ -24,6 +24,7 @@ import {
 } from '@nestjs/swagger';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CardResponseDto } from './dto/card-response.dto';
+import { PayDto } from './dto/pay.dto';
 
 @Controller('payment')
 @UseGuards(JwtAuthGuard)
@@ -41,8 +42,8 @@ export class PaymentController {
   @HttpCode(200)
   @ApiOkResponse({ description: '결제 성공' })
   @ApiNotFoundResponse({ description: '카드가 등록되어 있지 않음' })
-  pay(@Req() req: Request) {
-    return this.paymentService.pay(req.user);
+  pay(@Req() req: Request, @Body() payDto: PayDto) {
+    return this.paymentService.pay(req.user, payDto);
   }
 
   @Post('card')

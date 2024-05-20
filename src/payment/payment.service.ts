@@ -12,18 +12,20 @@ import { Card } from './entities/card.entity';
 import { Repository } from 'typeorm';
 import { ParkingTransactionService } from 'src/parking-transaction/parking-transaction.service';
 import { ParkingTransaction } from 'src/parking-transaction/entities/parking-transaction.entity';
+import { PayDto } from './dto/pay.dto';
 
 @Injectable()
 export class PaymentService {
   constructor(
     private readonly configService: ConfigService,
     @InjectRepository(Card) private readonly cardRepository: Repository<Card>,
+    @InjectRepository(ParkingTransaction)
+    private readonly parkingTransactionRepository: Repository<ParkingTransaction>,
     private readonly parkingTransactionService: ParkingTransactionService,
   ) {}
 
-  async pay(user: User) {
+  async pay(user: User, payDto: PayDto) {
     const paymentUrl = 'https://api.portone.io';
-    const paymentId = crypto.randomUUID();
     const card = await this.cardRepository.findOne({
       where: { user: { id: user.id } },
     });
@@ -31,7 +33,10 @@ export class PaymentService {
       throw new NotFoundException('Credit card not found');
     }
     const unPaidParkingTransaction =
-      await this.parkingTransactionService.findUnpaidParkingTransactions(user);
+      await this.parkingTransactionService.findUnpaidParkingTransactions(
+        user,
+        payDto.paymentId,
+      );
 
     if (!unPaidParkingTransaction) {
       throw new NotFoundException('No unpaid parking transaction');
@@ -50,7 +55,7 @@ export class PaymentService {
 
     if (totalAmount >= 100) {
       await axios.post(
-        `${paymentUrl}/payments/${paymentId}/instant`,
+        `${paymentUrl}/payments/${unPaidParkingTransaction.paymentId}/instant`,
         {
           channelKey: this.configService.get('PORTONE_CHANNEL_KEY'),
           orderName: '주차장 정산',
@@ -81,28 +86,32 @@ export class PaymentService {
         },
       );
 
-      const result = await axios.get(`${paymentUrl}/payments/${paymentId}`, {
-        headers: {
-          Authorization: `PortOne ${this.configService.get('PORTONE_API_SECRET')}`,
+      const result = await axios.get(
+        `${paymentUrl}/payments/${unPaidParkingTransaction.paymentId}`,
+        {
+          headers: {
+            Authorization: `PortOne ${this.configService.get('PORTONE_API_SECRET')}`,
+          },
         },
-      });
+      );
 
       if (result.data.status === 'PAID') {
-        await this.parkingTransactionService.completePayment(
-          unPaidParkingTransaction,
+        await this.completePayment({
+          parkingTransaction: unPaidParkingTransaction,
+          totalAmount,
           parkingAmount,
-        );
+        });
         return result.data;
       } else
-        throw new InternalServerErrorException(
-          {},
-          { description: result.data.status },
-        );
+        throw new InternalServerErrorException('Payment failed', {
+          description: result.data.status,
+        });
     } else {
-      return await this.parkingTransactionService.completePayment(
-        unPaidParkingTransaction,
-        null,
-      );
+      return await this.completePayment({
+        parkingTransaction: unPaidParkingTransaction,
+        totalAmount,
+        parkingAmount: null,
+      });
     }
   }
 
@@ -144,5 +153,27 @@ export class PaymentService {
     const parkingTimeInMinutes = parkingTimeInMilliseconds / 1000 / 60;
 
     return Math.floor(parkingTimeInMinutes * 100);
+  }
+
+  completePayment({
+    parkingTransaction,
+    parkingAmount,
+    totalAmount,
+  }: {
+    parkingTransaction: ParkingTransaction;
+    parkingAmount: number;
+    totalAmount: number | null;
+  }) {
+    return this.parkingTransactionRepository.update(
+      {
+        id: parkingTransaction.id,
+      },
+      {
+        isPaid: true,
+        paymentTime: new Date(),
+        parkingAmount,
+        totalAmount,
+      },
+    );
   }
 }
