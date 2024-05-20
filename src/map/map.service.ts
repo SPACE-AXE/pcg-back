@@ -55,7 +55,7 @@ export class MapService {
       const spaceFilter = priceFilter.filter((item) => {
         if (
           item.prkcmprt === undefined ||
-          parseInt(item.prkcmprt) <= mapBodyDto.space
+          parseInt(item.prkcmprt) >= mapBodyDto.space
         ) {
           return item;
         }
