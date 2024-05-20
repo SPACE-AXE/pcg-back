@@ -40,14 +40,19 @@ export class ParkingTransactionService {
       throw new ConflictException('Car is already parked');
     }
 
+    const paymentId = crypto.randomUUID();
+
     const newParkingTransaction = this.parkingTransactionRepository.create({
       user: { id: car ? car.user.id : null },
       car: { id: car ? car.id : null },
       park: { id: createParkingTransactionDto.parkId },
       carNum: createParkingTransactionDto.carNum,
+      paymentId,
     });
 
-    return this.parkingTransactionRepository.insert(newParkingTransaction);
+    await this.parkingTransactionRepository.insert(newParkingTransaction);
+
+    return { paymentId };
   }
 
   async exitParkingTransaction(
@@ -139,28 +144,9 @@ export class ParkingTransactionService {
     });
   }
 
-  findUnpaidParkingTransactions(user: User) {
+  findUnpaidParkingTransactions(user: User, paymentId: string) {
     return this.parkingTransactionRepository.findOne({
-      where: { isPaid: false, user: { id: user.id } },
+      where: { isPaid: false, user: { id: user.id }, paymentId },
     });
-  }
-
-  completePayment(
-    parkingTransaction: ParkingTransaction,
-    parkingAmount: number | null,
-  ) {
-    return this.parkingTransactionRepository.update(
-      {
-        id: parkingTransaction.id,
-      },
-      {
-        isPaid: true,
-        paymentTime: new Date(),
-        parkingAmount,
-        totalAmount: parkingTransaction.chargeAmount
-          ? parkingTransaction.parkingAmount + parkingTransaction.chargeAmount
-          : parkingTransaction.parkingAmount,
-      },
-    );
   }
 }
