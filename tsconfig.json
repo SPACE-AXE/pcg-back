@@ -18,6 +18,6 @@
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "esModuleInterop": true,
-    "typeRoots": ["./src/types", "./node_modules/@types"]
+    "typeRoots": ["src/api/v1/types", "./node_modules/@types"]
   }
 }
