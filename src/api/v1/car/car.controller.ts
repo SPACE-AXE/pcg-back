@@ -21,7 +21,7 @@ import {
 } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
 import { Request } from 'express';
-import { AccessToken, RefreshToken } from 'src/api/v1/constants/constants';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CarResponseDto } from './dto/car-response.dto';
 
 @Controller({ path: 'car', version: '1' })

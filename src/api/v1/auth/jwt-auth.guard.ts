@@ -8,7 +8,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { Request, Response } from 'express';
-import { AccessToken, RefreshToken } from 'src/api/v1/constants/constants';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserService } from 'src/api/v1/user/user.service';
 
 @Injectable()
