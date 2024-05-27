@@ -3,7 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
 import { AccessToken, RefreshToken } from './constants/constants';
 import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
@@ -58,6 +58,11 @@ async function bootstrap() {
       RefreshToken,
     )
     .build();
+
+  app.setGlobalPrefix('api');
+  app.enableVersioning({
+    type: VersioningType.URI,
+  });
 
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup(documentEndpoint, app, document, {

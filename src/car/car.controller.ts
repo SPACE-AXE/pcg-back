@@ -24,7 +24,7 @@ import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CarResponseDto } from './dto/car-response.dto';
 
-@Controller('car')
+@Controller({ path: 'car', version: '1' })
 @ApiTags('차량')
 @ApiCookieAuth(AccessToken)
 @ApiCookieAuth(RefreshToken)
