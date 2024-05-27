@@ -97,6 +97,7 @@ export class AuthController {
   })
   @ApiOkResponse({ description: '비밀번호 변경을 위한 토큰 발급(이메일)' })
   @ApiNotFoundResponse({ description: '사용자 없음' })
+  @ApiConflictResponse({ description: '이미 생성된 토큰이 있음' })
   @HttpCode(200)
   async sendResetEmail(@Body() body: ResetEmailDto) {
     return this.authService.sendResetEmail(body);
