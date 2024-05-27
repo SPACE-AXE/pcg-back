@@ -33,6 +33,7 @@ import { FindUsernameDto } from './dto/find-username.dto';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LoginDto } from './dto/login.dto';
+import LoginResponseDto from './dto/login-response.dto';
 
 @Controller('auth')
 @ApiTags('인증')
@@ -48,7 +49,7 @@ export class AuthController {
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
     description: '로그인 성공 (토큰은 쿠키로 발급)',
-    type: User,
+    type: LoginResponseDto,
   })
   @ApiUnauthorizedResponse({ description: '아이디 또는 비밀번호 틀림' })
   async login(@Req() req: Request, @Res() res: Response) {

@@ -112,4 +112,21 @@ export class ParkingTransactionController {
   findAll(@Req() req: Request) {
     return this.parkingTransactionService.findAll(req.user);
   }
+
+  @Get('current')
+  @ApiOperation({
+    summary: '현재 주차 중인 차량 조회',
+    description: '결제가 되어있지 않은 모든 차량을 조회합니다. ',
+  })
+  @UseGuards(JwtAuthGuard)
+  @ApiCookieAuth(AccessToken)
+  @ApiCookieAuth(RefreshToken)
+  @ApiOkResponse({
+    description: '현재 주차 중인 차량 조회 성공',
+    type: ParkingTransactionResponseDto,
+  })
+  @ApiUnauthorizedResponse({ description: '토큰 만료' })
+  getParkedCars(@Req() req: Request) {
+    return this.parkingTransactionService.getParkedCars(req.user);
+  }
 }
