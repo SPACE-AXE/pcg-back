@@ -44,15 +44,15 @@ export class AuthService {
 
     const token = randomBytes(10).toString('hex');
 
+    const newEmailToken = this.emailTokenRepository.create({ token, user });
+    await this.emailTokenRepository.insert(newEmailToken);
+
     const mailResult = await transporter.sendMail({
       from: this.configService.get('MAIL_USER'),
       to: body.email,
       subject: '[박차고] 비밀번호 찾기',
       html: `<p>비밀번호 재설정을 위한 코드는 ${token} 입니다. 이 코드는 5분간 유효합니다.</p>`,
     });
-
-    const newEmailToken = this.emailTokenRepository.create({ token, user });
-    await this.emailTokenRepository.insert(newEmailToken);
 
     return mailResult;
   }
