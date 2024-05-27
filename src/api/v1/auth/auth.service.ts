@@ -12,7 +12,7 @@ import nodemailer from 'nodemailer';
 import { randomBytes } from 'crypto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EmailToken } from './entities/email-token.entity';
-import { Repository } from 'typeorm';
+import { LessThan, Repository } from 'typeorm';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 
@@ -58,13 +58,19 @@ export class AuthService {
   }
 
   async resetPassword(body: ResetPasswordDto) {
+    const expiredTokens = await this.emailTokenRepository.find({
+      where: { createdAt: LessThan(new Date(Date.now() - 300 * 1000)) },
+    });
+
+    await this.emailTokenRepository.remove(expiredTokens);
+
     const emailToken = await this.emailTokenRepository.findOne({
       where: { token: body.token },
     });
 
     if (
       !emailToken ||
-      emailToken.createdAt.getTime() + 300 < Date.now() //TTL 5분이 초과되었을 경우
+      emailToken.createdAt.getTime() / 1000 + 300 < Date.now() / 1000 //TTL 5분이 초과되었을 경우
     ) {
       emailToken
         ? await this.emailTokenRepository.delete(emailToken.id)
