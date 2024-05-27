@@ -66,7 +66,9 @@ export class AuthService {
       !emailToken ||
       emailToken.createdAt.getTime() + 300 < Date.now() //TTL 5분이 초과되었을 경우
     ) {
-      await this.emailTokenRepository.delete(emailToken.id);
+      emailToken
+        ? await this.emailTokenRepository.delete(emailToken.id)
+        : undefined;
       throw new UnauthorizedException('Token is not valid');
     }
 
