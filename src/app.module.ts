@@ -5,7 +5,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { UserModule } from './api/v1/user/user.module';
 import { AuthModule } from './api/v1/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import typeORMConfig from './api/v1/config/typeorm.config';
+import typeORMConfig from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { ParkModule } from './api/v1/park/park.module';
 import { CarModule } from './api/v1/car/car.module';
