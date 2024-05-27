@@ -4,7 +4,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LocationQueryDto } from './dto/location.dto';
 import { ParkResponseDto } from './dto/park-response.dto';
 
-@Controller('park')
+@Controller({ path: 'park', version: '1' })
 @ApiTags('주차장')
 export class ParkController {
   constructor(private readonly parkService: ParkService) {}

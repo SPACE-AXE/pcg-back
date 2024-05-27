@@ -26,7 +26,7 @@ import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CardResponseDto } from './dto/card-response.dto';
 import { PayDto } from './dto/pay.dto';
 
-@Controller('payment')
+@Controller({ path: 'payment', version: '1' })
 @UseGuards(JwtAuthGuard)
 @ApiCookieAuth(AccessToken)
 @ApiCookieAuth(RefreshToken)

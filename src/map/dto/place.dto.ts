@@ -6,5 +6,5 @@ export class placeDto {
   @Type(() => String)
   @IsString()
   @ApiProperty({ description: '장소' })
-  place: String;
+  place: string;
 }

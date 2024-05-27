@@ -25,7 +25,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
 
-@Controller('parking-transaction')
+@Controller({ path: 'parking-transaction', version: '1' })
 @ApiTags('입출차 내역')
 export class ParkingTransactionController {
   constructor(

@@ -6,5 +6,5 @@ export class addrDto {
   @Type(() => String)
   @IsString()
   @ApiProperty({ description: '주소' })
-  addr: String;
+  addr: string;
 }

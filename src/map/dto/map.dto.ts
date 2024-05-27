@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform, Type } from 'class-transformer';
-import { IsBoolean, IsNumber, IsString, Max, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNumber, IsString } from 'class-validator';
 
 export class MapBodyDto {
   @Type(() => Number)
@@ -27,5 +27,5 @@ export class MapBodyDto {
   @IsString()
   // @Transform(({ value }) => value === 'true')
   @ApiProperty({ description: '장애인 여부' })
-  disabled: String;
+  disabled: string;
 }
