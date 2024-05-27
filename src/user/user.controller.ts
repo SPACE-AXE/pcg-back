@@ -16,7 +16,7 @@ import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserResponseDto } from './dto/user-response.dto';
 
-@Controller('user')
+@Controller({ path: 'user', version: '1' })
 @ApiTags('사용자')
 @ApiCookieAuth(AccessToken)
 @ApiCookieAuth(RefreshToken)

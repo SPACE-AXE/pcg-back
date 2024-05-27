@@ -35,7 +35,7 @@ import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LoginDto } from './dto/login.dto';
 import LoginResponseDto from './dto/login-response.dto';
 
-@Controller('auth')
+@Controller({ path: 'auth', version: '1' })
 @ApiTags('인증')
 export class AuthController {
   constructor(

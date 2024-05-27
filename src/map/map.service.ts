@@ -3,8 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import * as fs from 'fs';
 import { MapBodyDto } from './dto/map.dto';
-import { filter } from 'rxjs';
-import { ConnectedSocket } from '@nestjs/websockets';
 
 @Injectable()
 export class MapService {
@@ -76,7 +74,7 @@ export class MapService {
     }
   }
 
-  async addrToLatLng(addr: String) {
+  async addrToLatLng(addr: string) {
     const apiKeyId = this.configService.get<string>('NAVER_MAP_ID');
     const apiKey = this.configService.get<string>('NAVER_MAP_SECRET');
 
@@ -92,7 +90,7 @@ export class MapService {
     return response.data.addresses[0];
   }
 
-  async placeToLatLng(place: String) {
+  async placeToLatLng(place: string) {
     const response = await axios.get(
       `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${this.configService.get<string>('GET_ADDR_KEY')}`,
       {
@@ -107,7 +105,7 @@ export class MapService {
     return await this.addrToLatLng(response.data.results.juso[0].roadAddrPart1);
   }
 
-  async getParkInfo(name: String) {
+  async getParkInfo(name: string) {
     const apiUrl = `http://api.data.go.kr/openapi/tn_pubr_prkplce_info_api?serviceKey=${this.configService.get('PUBLIC_DATA_ID')}&pageNo=1&numOfRows=100&type=json&prkplceNm=${name}`;
     const response = await axios.get(apiUrl);
     const data = response.data.response.body.items[0];

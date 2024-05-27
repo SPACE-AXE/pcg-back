@@ -1,5 +1,5 @@
 import { MapService } from './map.service';
-import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
+import { Controller, Get, HttpCode, Query } from '@nestjs/common';
 import { ParkService } from '../park/park.service';
 import { MapBodyDto } from './dto/map.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -7,7 +7,7 @@ import { addrDto } from './dto/addr.dto';
 import { ParkInfoDto } from './dto/parkInfo.dto';
 import { placeDto } from './dto/place.dto';
 
-@Controller('map')
+@Controller({ path: 'map', version: '1' })
 @ApiTags('지도')
 export class MapController {
   constructor(
