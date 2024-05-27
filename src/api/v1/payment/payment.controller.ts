@@ -22,7 +22,7 @@ import {
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
-import { AccessToken, RefreshToken } from 'src/api/v1/constants/constants';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CardResponseDto } from './dto/card-response.dto';
 import { PayDto } from './dto/pay.dto';
 

@@ -22,7 +22,7 @@ import {
 } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
-import { AccessToken, RefreshToken } from 'src/api/v1/constants/constants';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
 
 @Controller({ path: 'parking-transaction', version: '1' })
