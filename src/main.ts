@@ -15,8 +15,9 @@ const documentEndpoint = process.env.SWAGGER_ENDPOINT;
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   process.env.NODE_ENV === 'production'
-    ? app.use(new SslMiddleware())
+    ? app.use(new SslMiddleware().use)
     : undefined;
+
   app.enableCors({
     origin: '*',
     credentials: true,
