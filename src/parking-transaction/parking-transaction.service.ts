@@ -149,4 +149,18 @@ export class ParkingTransactionService {
       where: { isPaid: false, user: { id: user.id }, paymentId },
     });
   }
+
+  async getParkedCars(user: User) {
+    const parkedCars = await this.parkingTransactionRepository.find({
+      where: { user: { id: user.id }, isPaid: false },
+    });
+
+    parkedCars.forEach((parkedCar) => {
+      parkedCar.currentParkingTime = Math.floor(
+        (new Date().getTime() - parkedCar.entryTime.getTime()) / 1000,
+      );
+    });
+
+    return parkedCars;
+  }
 }
