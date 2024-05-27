@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Car } from 'src/car/entities/car.entity';
 import { Park } from 'src/park/entities/park.entity';
 import { User } from 'src/user/entities/user.entity';
@@ -41,4 +42,7 @@ export class ParkingTransaction {
   isPaid: boolean;
   @Column({ name: 'payment_id', unique: true, length: 36 })
   paymentId: string;
+
+  @ApiProperty({ description: '현재 주차 시간(초 단위)' })
+  currentParkingTime: number;
 }
