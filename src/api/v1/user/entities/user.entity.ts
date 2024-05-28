@@ -26,7 +26,7 @@ export class User {
   @Column({ length: 20, unique: true })
   username: string;
 
-  @Column({ length: 200 })
+  @Column({ length: 200, select: false })
   password: string;
 
   @Column({ type: 'date' })
