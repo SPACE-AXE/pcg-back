@@ -66,6 +66,7 @@ export class AuthService {
 
     const emailToken = await this.emailTokenRepository.findOne({
       where: { token: body.token },
+				 relations: { user : true }
     });
 
     if (
