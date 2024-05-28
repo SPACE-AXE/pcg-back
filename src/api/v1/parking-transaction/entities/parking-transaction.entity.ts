@@ -38,7 +38,7 @@ export class ParkingTransaction {
   car: Car;
   @Column({ name: 'car_num', length: 15 })
   carNum: string;
-  @Column({ name: 'is_paid', default: false, type: 'tinyint' })
+  @Column({ name: 'is_paid', default: false, type: 'boolean' })
   isPaid: boolean;
   @Column({ name: 'payment_id', unique: true, length: 36 })
   paymentId: string;
