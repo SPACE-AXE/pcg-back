@@ -29,6 +29,6 @@ export class Park {
   @Column({ type: 'point' })
   location: Point;
 
-  @Column({ length: 20 })
+  @Column({ length: 20, select: false })
   ip: string;
 }

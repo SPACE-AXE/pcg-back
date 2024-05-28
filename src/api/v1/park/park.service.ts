@@ -12,7 +12,7 @@ export class ParkService {
 
   async findByLocation(x: number, y: number) {
     const results = await this.parkRepository.query(
-      `SELECT * FROM park WHERE ST_Distance_Sphere(park.location, Point(${y}, ${x})) <= 5000;`,
+      `SELECT id, name, phone, address, location, total_space, car_space, disability_space FROM park WHERE ST_Distance_Sphere(park.location, Point(${y}, ${x})) <= 5000;`,
     );
 
     for (const result of results) {
@@ -30,5 +30,16 @@ export class ParkService {
     }
 
     return results as ParkResponseDto[];
+  }
+
+  async getIpByManageCode(manageCode: string) {
+    return this.parkRepository.findOne({
+      where: {
+        manageCode,
+      },
+      select: {
+        ip: true,
+      },
+    });
   }
 }
