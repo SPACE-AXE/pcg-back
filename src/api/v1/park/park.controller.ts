@@ -10,7 +10,7 @@ import {
 } from '@nestjs/swagger';
 import { LocationQueryDto } from './dto/location.dto';
 import { ParkResponseDto } from './dto/park-response.dto';
-import { GetIpResponseDto } from './dto/get-ip-response.dto';
+import { GetInfoResponseDto } from './dto/get-info-response.dto';
 import { ManageCode } from 'src/constants/constants';
 import { ParkAuthGuard } from './park-auth/park-auth.guard';
 
@@ -30,7 +30,7 @@ export class ParkController {
     return this.parkService.findByLocation(query.x, query.y);
   }
 
-  @Get('ip')
+  @Get('info')
   @ApiOperation({ summary: '관리 코드로 주차장 정보 가져오기' })
   @ApiHeader({
     name: ManageCode,
@@ -38,7 +38,7 @@ export class ParkController {
   })
   @ApiOkResponse({
     description: '주차장 정보 조회 성공',
-    type: GetIpResponseDto,
+    type: GetInfoResponseDto,
   })
   @ApiBadRequestResponse({
     description: '관리 코드 누락',
