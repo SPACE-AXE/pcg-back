@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/swagger';
-import { ParkingTransaction } from '../entities/parking-transaction.entity';
+import { CurrentParkingTransactionResponseDto } from './current-parking-transaction-response.dto';
 
 export class ParkingTransactionResponseDto extends OmitType(
-  ParkingTransaction,
-  ['user', 'car', 'park'],
+  CurrentParkingTransactionResponseDto,
+  ['currentParkingTime'],
 ) {}
