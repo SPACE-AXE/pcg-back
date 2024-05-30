@@ -33,8 +33,10 @@ import {
   ManageCode,
   RefreshToken,
 } from 'src/constants/constants';
-import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
+import { CurrentParkingTransactionResponseDto } from './dto/current-parking-transaction-response.dto';
 import { ParkAuthGuard } from '../park/park-auth/park-auth.guard';
+import { UnpaidParkingTransactionResponseDto } from './dto/unpaid-parking-transaction-response.dto';
+import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
 
 @Controller({ path: 'parking-transaction', version: '1' })
 @ApiTags('입출차 내역')
@@ -134,7 +136,7 @@ export class ParkingTransactionController {
   @ApiCookieAuth(RefreshToken)
   @ApiOkResponse({
     description: '현재 주차 중인 차량 조회 성공',
-    type: ParkingTransactionResponseDto,
+    type: CurrentParkingTransactionResponseDto,
   })
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   getParkedCars(@Req() req: Request) {
@@ -142,8 +144,11 @@ export class ParkingTransactionController {
   }
 
   @Get('unpaid')
-  @ApiOperation({ summary: '미납 결제건 조회' })
-  @ApiOkResponse({ description: '미납 결제건 조회 성공' })
+  @ApiOperation({ summary: '미납 결제건 조회(관리 코드)' })
+  @ApiOkResponse({
+    description: '미납 결제건 조회 성공',
+    type: UnpaidParkingTransactionResponseDto,
+  })
   @ApiHeader({
     name: ManageCode,
     description: '주차장 관리 코드',
