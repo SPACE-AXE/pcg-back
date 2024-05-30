@@ -7,6 +7,8 @@ import {
   UseGuards,
   Patch,
   HttpCode,
+  Query,
+  Headers,
 } from '@nestjs/common';
 import { ParkingTransactionService } from './parking-transaction.service';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
@@ -15,15 +17,24 @@ import {
   ApiCookieAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
+  ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiQuery,
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Request } from 'express';
 import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
-import { AccessToken, RefreshToken } from 'src/constants/constants';
+import {
+  AccessToken,
+  CarNum,
+  ManageCode,
+  RefreshToken,
+} from 'src/constants/constants';
 import { ParkingTransactionResponseDto } from './dto/parking-transaction-response.dto';
+import { ParkAuthGuard } from '../park/park-auth/park-auth.guard';
 
 @Controller({ path: 'parking-transaction', version: '1' })
 @ApiTags('입출차 내역')
@@ -128,5 +139,27 @@ export class ParkingTransactionController {
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   getParkedCars(@Req() req: Request) {
     return this.parkingTransactionService.getParkedCars(req.user);
+  }
+
+  @Get('unpaid')
+  @ApiOperation({ summary: '미납 결제건 조회' })
+  @ApiOkResponse({ description: '미납 결제건 조회 성공' })
+  @ApiHeader({
+    name: ManageCode,
+    description: '주차장 관리 코드',
+  })
+  @ApiQuery({
+    name: CarNum,
+    description: '차량 번호',
+  })
+  @ApiNotFoundResponse({ description: '미납 결제건 없음' })
+  @UseGuards(ParkAuthGuard)
+  getUnpaidParkingTransactionByCarNumber(
+    @Headers(ManageCode) _manageCode: string,
+    @Query(CarNum) carNum: string,
+  ) {
+    return this.parkingTransactionService.getUnpaidParkingTransactionByCarNumber(
+      carNum,
+    );
   }
 }

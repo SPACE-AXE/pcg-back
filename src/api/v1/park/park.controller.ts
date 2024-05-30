@@ -1,14 +1,9 @@
-import {
-  BadRequestException,
-  Controller,
-  Get,
-  Headers,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Headers, Query, UseGuards } from '@nestjs/common';
 import { ParkService } from './park.service';
 import {
   ApiBadRequestResponse,
   ApiHeader,
+  ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -16,6 +11,8 @@ import {
 import { LocationQueryDto } from './dto/location.dto';
 import { ParkResponseDto } from './dto/park-response.dto';
 import { GetIpResponseDto } from './dto/get-ip-response.dto';
+import { ManageCode } from 'src/constants/constants';
+import { ParkAuthGuard } from './park-auth/park-auth.guard';
 
 @Controller({ path: 'park', version: '1' })
 @ApiTags('주차장')
@@ -34,21 +31,23 @@ export class ParkController {
   }
 
   @Get('ip')
-  @ApiOperation({ summary: '관리 코드로 주차장 IP 가져오기' })
+  @ApiOperation({ summary: '관리 코드로 주차장 정보 가져오기' })
   @ApiHeader({
-    name: 'manage-code',
-    required: true,
+    name: ManageCode,
     description: '주차장 관리 코드',
   })
   @ApiOkResponse({
-    description: '주차장 IP 조회 성공',
+    description: '주차장 정보 조회 성공',
     type: GetIpResponseDto,
   })
   @ApiBadRequestResponse({
     description: '관리 코드 누락',
   })
-  getIpByManageCode(@Headers('manage-code') manageCode: string) {
-    if (!manageCode) throw new BadRequestException('Manage code required');
-    return this.parkService.getIpByManageCode(manageCode);
+  @ApiNotFoundResponse({
+    description: '주차장을 찾을 수 없음',
+  })
+  @UseGuards(ParkAuthGuard)
+  getInfoByManageCode(@Headers(ManageCode) manageCode: string) {
+    return this.parkService.getInfoByManageCode(manageCode);
   }
 }
