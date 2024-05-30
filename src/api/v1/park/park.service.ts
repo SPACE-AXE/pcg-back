@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Park } from './entities/park.entity';
 import { Repository } from 'typeorm';
@@ -32,14 +32,23 @@ export class ParkService {
     return results as ParkResponseDto[];
   }
 
-  async getIpByManageCode(manageCode: string) {
-    return this.parkRepository.findOne({
+  async getInfoByManageCode(manageCode: string) {
+    const park = await this.parkRepository.findOne({
       where: {
         manageCode,
       },
       select: {
         ip: true,
+        id: true,
+        name: true,
+        phone: true,
+        address: true,
+        totalSpace: true,
+        carSpace: true,
+        disabilitySpace: true,
       },
     });
+    if (!park) throw new NotFoundException('Park not found');
+    return park;
   }
 }

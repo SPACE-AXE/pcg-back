@@ -2,6 +2,7 @@ import {
   ConflictException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -162,5 +163,16 @@ export class ParkingTransactionService {
     });
 
     return parkedCars;
+  }
+
+  async getUnpaidParkingTransactionByCarNumber(carNum: string) {
+    const unpaidParkingTransaction =
+      await this.parkingTransactionRepository.findOne({
+        where: { carNum, isPaid: false },
+      });
+    if (!unpaidParkingTransaction) {
+      throw new NotFoundException('Unpaid parking transaction not found');
+    }
+    return unpaidParkingTransaction;
   }
 }
