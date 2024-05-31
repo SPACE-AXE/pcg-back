@@ -13,12 +13,12 @@ export class TypeormExceptionFilter implements ExceptionFilter {
     if (exception.message.includes('Duplicate entry')) {
       response.status(409).json({
         statusCode: 409,
-        message: exception.message,
+        message: 'Duplicate entry',
       });
     } else {
       response.status(500).json({
         statusCode: 500,
-        message: exception.message,
+        message: 'Internal Server Error',
       });
     }
   }
