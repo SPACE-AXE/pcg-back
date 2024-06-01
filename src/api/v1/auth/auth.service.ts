@@ -44,7 +44,11 @@ export class AuthService {
 
     const token = randomBytes(10).toString('hex');
 
-    const newEmailToken = this.emailTokenRepository.create({ token, user });
+    const newEmailToken = this.emailTokenRepository.create({
+      token,
+      user,
+      createdAt: new Date(),
+    });
     await this.emailTokenRepository.insert(newEmailToken);
 
     const mailResult = await transporter.sendMail({
