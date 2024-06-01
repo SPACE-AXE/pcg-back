@@ -20,7 +20,8 @@ export class ParkingTransactionService {
     private readonly carRepository: Repository<Car>,
   ) {}
 
-  async addParkingTransaction(
+  async startParkingTransaction(
+    parkId: number,
     createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     const car = await this.carRepository.findOne({
@@ -46,7 +47,7 @@ export class ParkingTransactionService {
     const newParkingTransaction = this.parkingTransactionRepository.create({
       user: { id: car ? car.user.id : null },
       car: { id: car ? car.id : null },
-      park: { id: createParkingTransactionDto.parkId },
+      park: { id: parkId },
       carNum: createParkingTransactionDto.carNum,
       paymentId,
     });
@@ -57,10 +58,12 @@ export class ParkingTransactionService {
   }
 
   async exitParkingTransaction(
+    parkId: number,
     createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     const parkingTransaction = await this.parkingTransactionRepository.findOne({
       where: {
+        park: { id: parkId },
         carNum: createParkingTransactionDto.carNum,
         exitTime: IsNull(),
       },
@@ -82,9 +85,13 @@ export class ParkingTransactionService {
     );
   }
 
-  async startCharge(createParkingTransactionDto: CreateParkingTransactionDto) {
+  async startCharge(
+    parkId: number,
+    createParkingTransactionDto: CreateParkingTransactionDto,
+  ) {
     const parkingTransaction = await this.parkingTransactionRepository.findOne({
       where: {
+        park: { id: parkId },
         carNum: createParkingTransactionDto.carNum,
         exitTime: IsNull(),
       },
@@ -106,9 +113,13 @@ export class ParkingTransactionService {
     );
   }
 
-  async finishCharge(createParkingTransactionDto: CreateParkingTransactionDto) {
+  async finishCharge(
+    parkId: number,
+    createParkingTransactionDto: CreateParkingTransactionDto,
+  ) {
     const parkingTransaction = await this.parkingTransactionRepository.findOne({
       where: {
+        park: { id: parkId },
         carNum: createParkingTransactionDto.carNum,
         exitTime: IsNull(),
       },
