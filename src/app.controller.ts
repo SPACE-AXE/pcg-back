@@ -1,6 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Req } from '@nestjs/common';
 import { AppService } from './app.service';
 import { ApiOkResponse, ApiOperation } from '@nestjs/swagger';
+import { Request } from 'express';
 
 @Controller()
 export class AppController {
@@ -9,7 +10,8 @@ export class AppController {
   @Get()
   @ApiOperation({ summary: '서버 상태 확인' })
   @ApiOkResponse({ description: '서버 상태 정상' })
-  checkHealth() {
+  checkHealth(@Req() req: Request) {
+    console.log(req.hostname);
     return this.appService.checkHealth();
   }
 }

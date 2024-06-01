@@ -8,7 +8,6 @@ import {
   Patch,
   HttpCode,
   Query,
-  Headers,
 } from '@nestjs/common';
 import { ParkingTransactionService } from './parking-transaction.service';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
@@ -50,11 +49,19 @@ export class ParkingTransactionController {
   @ApiCreatedResponse({
     description: '입차 내역 기록 성공',
   })
+  @ApiHeader({
+    name: ManageCode,
+    description: '주차장 관리 코드',
+    required: true,
+  })
+  @UseGuards(ParkAuthGuard)
   @ApiConflictResponse({ description: '차량이 이미 주차 중임' })
   addParkingTransaction(
+    @Req() req: Request,
     @Body() createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
-    return this.parkingTransactionService.addParkingTransaction(
+    return this.parkingTransactionService.startParkingTransaction(
+      req.park.id,
       createParkingTransactionDto,
     );
   }
@@ -65,16 +72,24 @@ export class ParkingTransactionController {
     description:
       '결제가 선행되어야 출차가 가능하므로, 결제 이후 해당 엔드포인트에 요청하여야 합니다.',
   })
+  @ApiHeader({
+    name: ManageCode,
+    description: '주차장 관리 코드',
+    required: true,
+  })
   @HttpCode(200)
   @ApiOkResponse({
     description: '출차 승인',
   })
+  @UseGuards(ParkAuthGuard)
   @ApiConflictResponse({ description: '차량이 주차 중이 아님' })
   @ApiForbiddenResponse({ description: '결제가 완료되지 않음' })
   exitParkingTransaction(
+    @Req() req: Request,
     @Body() createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     return this.parkingTransactionService.exitParkingTransaction(
+      req.park.id,
       createParkingTransactionDto,
     );
   }
@@ -84,13 +99,21 @@ export class ParkingTransactionController {
   @ApiOkResponse({
     description: '전기차 충전 시작 성공',
   })
+  @ApiHeader({
+    name: ManageCode,
+    description: '주차장 관리 코드',
+    required: true,
+  })
   @ApiConflictResponse({
     description: '차량이 주차 중이 아님 / 이미 충전 중임 / 이미 충전이 끝남',
   })
+  @UseGuards(ParkAuthGuard)
   startCharge(
+    @Req() req: Request,
     @Body() createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     return this.parkingTransactionService.startCharge(
+      req.park.id,
       createParkingTransactionDto,
     );
   }
@@ -100,13 +123,21 @@ export class ParkingTransactionController {
   @ApiOkResponse({
     description: '전기차 충전 종료 성공',
   })
+  @ApiHeader({
+    name: ManageCode,
+    description: '주차장 관리 코드',
+    required: true,
+  })
+  @UseGuards(ParkAuthGuard)
   @ApiConflictResponse({
     description: '차량이 주차 중이 아님 / 충전 중이 아님',
   })
   finishCharge(
+    @Req() req: Request,
     @Body() createParkingTransactionDto: CreateParkingTransactionDto,
   ) {
     return this.parkingTransactionService.finishCharge(
+      req.park.id,
       createParkingTransactionDto,
     );
   }
@@ -128,7 +159,7 @@ export class ParkingTransactionController {
 
   @Get('current')
   @ApiOperation({
-    summary: '현재 주차 중인 차량 조회',
+    summary: '현재 주차 중인 차량 조회(회원)',
     description: '결제가 되어있지 않은 모든 차량을 조회합니다. ',
   })
   @UseGuards(JwtAuthGuard)
@@ -152,6 +183,7 @@ export class ParkingTransactionController {
   @ApiHeader({
     name: ManageCode,
     description: '주차장 관리 코드',
+    required: true,
   })
   @ApiQuery({
     name: CarNum,
@@ -159,10 +191,7 @@ export class ParkingTransactionController {
   })
   @ApiNotFoundResponse({ description: '미납 결제건 없음' })
   @UseGuards(ParkAuthGuard)
-  getUnpaidParkingTransactionByCarNumber(
-    @Headers(ManageCode) _manageCode: string,
-    @Query(CarNum) carNum: string,
-  ) {
+  getUnpaidParkingTransactionByCarNumber(@Query(CarNum) carNum: string) {
     return this.parkingTransactionService.getUnpaidParkingTransactionByCarNumber(
       carNum,
     );
