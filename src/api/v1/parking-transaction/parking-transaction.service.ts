@@ -10,6 +10,10 @@ import { ParkingTransaction } from './entities/parking-transaction.entity';
 import { IsNull, Repository } from 'typeorm';
 import { User } from 'src/api/v1/user/entities/user.entity';
 import { Car } from 'src/api/v1/car/entities/car.entity';
+import {
+  CHARGING_FEE_PER_MINUTE as CHARGING_FEE_PER_SECOND,
+  KR_TIME_DIFF,
+} from 'src/constants/constants';
 
 @Injectable()
 export class ParkingTransactionService {
@@ -50,6 +54,7 @@ export class ParkingTransactionService {
       park: { id: parkId },
       carNum: createParkingTransactionDto.carNum,
       paymentId,
+      entryTime: new Date(),
     });
 
     await this.parkingTransactionRepository.insert(newParkingTransaction);
@@ -141,13 +146,19 @@ export class ParkingTransactionService {
       { id: parkingTransaction.id },
       {
         chargeTime: this.getChargeTime(parkingTransaction),
-        chargeAmount: this.getChargeTime(parkingTransaction) / 100,
+        chargeAmount:
+          this.getChargeTime(parkingTransaction) * CHARGING_FEE_PER_SECOND,
       },
     );
   }
 
   private getChargeTime(parkingTransaction: ParkingTransaction): number {
-    return new Date().getTime() - parkingTransaction.chargeStartTime.getTime();
+    return (
+      (new Date().getTime() +
+        KR_TIME_DIFF -
+        parkingTransaction.chargeStartTime.getTime()) /
+      1000
+    );
   }
 
   findAll(user: User) {
