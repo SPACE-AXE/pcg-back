@@ -13,7 +13,11 @@ export class ParkAuthGuard implements CanActivate {
       return false;
     }
     if (typeof manageCode === 'string') {
-      await this.parkService.getInfoByManageCode(manageCode);
+      const park = await this.parkService.getInfoByManageCode(manageCode);
+      if (park) {
+        request.park = park;
+        return true;
+      }
       return true;
     }
     return false;
