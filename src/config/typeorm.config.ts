@@ -16,7 +16,7 @@ const typeORMConfig: TypeOrmModuleOptions = {
   logging: true,
   logger: 'file',
   autoLoadEntities: true,
-  timezone: 'local',
+  timezone: 'Z',
 };
 
 export default typeORMConfig;
