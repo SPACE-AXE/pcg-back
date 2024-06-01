@@ -13,6 +13,7 @@ import { Repository } from 'typeorm';
 import { ParkingTransactionService } from 'src/api/v1/parking-transaction/parking-transaction.service';
 import { ParkingTransaction } from 'src/api/v1/parking-transaction/entities/parking-transaction.entity';
 import { PayDto } from './dto/pay.dto';
+import { KR_TIME_DIFF, PARKING_FEE_PER_MINUTE } from 'src/constants/constants';
 
 @Injectable()
 export class PaymentService {
@@ -148,11 +149,12 @@ export class PaymentService {
     parkingTransaction: ParkingTransaction,
     exitTime: Date,
   ): number {
+    const exitTimeInKST = new Date(exitTime.getTime() + KR_TIME_DIFF);
     const parkingTimeInMilliseconds =
-      exitTime.getTime() - parkingTransaction.entryTime.getTime();
+      exitTimeInKST.getTime() - parkingTransaction.entryTime.getTime();
     const parkingTimeInMinutes = parkingTimeInMilliseconds / 1000 / 60;
 
-    return Math.floor(parkingTimeInMinutes * 100);
+    return Math.floor(parkingTimeInMinutes * PARKING_FEE_PER_MINUTE);
   }
 
   completePayment({
