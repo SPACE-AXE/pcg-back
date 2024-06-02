@@ -18,7 +18,7 @@ export class EmailToken {
   @Column({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
-  @OneToOne(() => User, (user) => user.emailToken)
+  @OneToOne(() => User, (user) => user.emailToken, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 }
