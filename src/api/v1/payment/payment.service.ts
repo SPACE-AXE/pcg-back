@@ -110,7 +110,7 @@ export class PaymentService {
     } else {
       return await this.completePayment({
         parkingTransaction: unPaidParkingTransaction,
-        totalAmount,
+        totalAmount: null,
         parkingAmount: null,
       });
     }
