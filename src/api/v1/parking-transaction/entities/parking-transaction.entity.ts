@@ -31,11 +31,17 @@ export class ParkingTransaction {
   parkingAmount: number;
   @Column({ name: 'total_amount', type: 'int', nullable: true })
   totalAmount: number;
-  @ManyToOne(() => User, (user) => user.id, { nullable: true })
+  @ManyToOne(() => User, (user) => user.id, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   user: User;
-  @ManyToOne(() => Park, (park) => park.id)
+  @ManyToOne(() => Park, (park) => park.id, { onDelete: 'SET NULL' })
   park: Park;
-  @ManyToOne(() => Car, (car) => car.id)
+  @ManyToOne(() => Car, (car) => car.id, {
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   car: Car;
   @Column({ name: 'car_num', length: 15 })
   carNum: string;

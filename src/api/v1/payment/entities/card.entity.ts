@@ -25,7 +25,7 @@ export class Card {
   @Column({ length: 2, name: 'expiry_month' })
   expiryMonth: string;
 
-  @OneToOne(() => User, (user) => user.card)
+  @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
