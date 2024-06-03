@@ -21,8 +21,4 @@ export class CreateUserDto {
   @IsString()
   @ApiProperty({ description: '비밀번호' })
   password: string;
-
-  @IsString()
-  @ApiProperty({ description: '생일' })
-  birth: Date;
 }

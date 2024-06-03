@@ -10,10 +10,7 @@ import { ParkingTransaction } from './entities/parking-transaction.entity';
 import { IsNull, Repository } from 'typeorm';
 import { User } from 'src/api/v1/user/entities/user.entity';
 import { Car } from 'src/api/v1/car/entities/car.entity';
-import {
-  CHARGING_FEE_PER_MINUTE as CHARGING_FEE_PER_SECOND,
-  KR_TIME_DIFF,
-} from 'src/constants/constants';
+import { CHARGING_FEE_PER_SECOND, KR_TIME_DIFF } from 'src/constants/constants';
 
 @Injectable()
 export class ParkingTransactionService {
@@ -142,12 +139,13 @@ export class ParkingTransactionService {
       throw new ConflictException('Car is already charged');
     }
 
+    const chargeTime = this.getChargeTime(parkingTransaction);
+
     return this.parkingTransactionRepository.update(
       { id: parkingTransaction.id },
       {
-        chargeTime: this.getChargeTime(parkingTransaction),
-        chargeAmount:
-          this.getChargeTime(parkingTransaction) * CHARGING_FEE_PER_SECOND,
+        chargeTime: chargeTime,
+        chargeAmount: chargeTime * CHARGING_FEE_PER_SECOND,
       },
     );
   }
