@@ -38,7 +38,6 @@ export class UserService {
   }
 
   async create(createUserDto: CreateUserDto) {
-    createUserDto.birth = new Date(createUserDto.birth);
     this.hashPassword(createUserDto);
     const newUser = this.userRepository.create({
       ...createUserDto,
@@ -63,7 +62,6 @@ export class UserService {
         username: true,
         password: true,
         id: true,
-        birth: true,
         email: true,
         name: true,
         createdAt: true,
