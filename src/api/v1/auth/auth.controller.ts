@@ -63,7 +63,7 @@ export class AuthController {
 
   @Post('register')
   @ApiOperation({ summary: '회원가입' })
-  @ApiCreatedResponse({ description: '회원가입 완료', type: User })
+  @ApiCreatedResponse({ description: '회원가입 완료' })
   @ApiConflictResponse({ description: '특정 항목 중복' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
