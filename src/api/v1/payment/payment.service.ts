@@ -50,7 +50,7 @@ export class PaymentService {
       exitTime,
     );
 
-    const totalAmount = unPaidParkingTransaction
+    const totalAmount = unPaidParkingTransaction.chargeAmount
       ? parkingAmount + unPaidParkingTransaction.chargeAmount
       : parkingAmount;
 
@@ -157,7 +157,7 @@ export class PaymentService {
     return Math.floor(parkingTimeInMinutes * PARKING_FEE_PER_MINUTE);
   }
 
-  completePayment({
+  private completePayment({
     parkingTransaction,
     parkingAmount,
     totalAmount,
