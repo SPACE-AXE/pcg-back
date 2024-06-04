@@ -42,7 +42,7 @@ export class AuthService {
       },
     });
 
-    const token = randomBytes(10).toString('hex');
+    const token = randomBytes(3).toString('hex');
 
     const newEmailToken = this.emailTokenRepository.create({
       token,
