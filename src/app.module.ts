@@ -2,16 +2,11 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { UserModule } from './api/v1/user/user.module';
-import { AuthModule } from './api/v1/auth/auth.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import typeORMConfig from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
-import { ParkModule } from './api/v1/park/park.module';
-import { CarModule } from './api/v1/car/car.module';
-import { ParkingTransactionModule } from './api/v1/parking-transaction/parking-transaction.module';
-import { PaymentModule } from './api/v1/payment/payment.module';
-import { MapModule } from './api/v1/map/map.module';
+import { V1Module } from './api/v1/v1.module';
+import { V2Module } from './api/v2/v2.module';
 
 @Module({
   imports: [
@@ -26,13 +21,8 @@ import { MapModule } from './api/v1/map/map.module';
       },
     ]),
     TypeOrmModule.forRoot(typeORMConfig),
-    UserModule,
-    AuthModule,
-    ParkModule,
-    CarModule,
-    ParkingTransactionModule,
-    PaymentModule,
-    MapModule,
+    V1Module,
+    V2Module,
   ],
   controllers: [AppController],
   providers: [AppService],

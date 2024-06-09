@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { AddCreditCardDto } from './dto/add-credit-card.dto';
-import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 import {
   ApiBadRequestResponse,
