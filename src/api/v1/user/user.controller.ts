@@ -12,7 +12,7 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserResponseDto } from './dto/user-response.dto';
 

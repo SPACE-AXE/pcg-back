@@ -19,7 +19,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/api/v1/auth/jwt-auth.guard';
+import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CarResponseDto } from './dto/car-response.dto';
