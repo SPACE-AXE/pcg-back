@@ -43,16 +43,6 @@ async function bootstrap() {
       )
     : undefined;
 
-  app.use(
-    [`${documentEndpoint}/v1`, `${documentEndpoint}/v2`],
-    expressBasicAuth({
-      challenge: true,
-      users: {
-        [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD,
-      },
-    }),
-  );
-
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
