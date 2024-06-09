@@ -6,9 +6,13 @@ import { Car } from './entities/car.entity';
 import { UserModule } from '../user/user.module';
 import { UserService } from '../user/user.service';
 import { User } from '../user/entities/user.entity';
+import { ParkingTransaction } from '../parking-transaction/entities/parking-transaction.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Car, User]), UserModule],
+  imports: [
+    TypeOrmModule.forFeature([Car, User, ParkingTransaction]),
+    UserModule,
+  ],
   controllers: [CarController],
   providers: [CarService, UserService],
 })
