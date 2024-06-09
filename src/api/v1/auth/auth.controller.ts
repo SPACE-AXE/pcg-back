@@ -25,9 +25,9 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from 'src/api/v1/user/entities/user.entity';
-import { CreateUserDto } from 'src/api/v1/user/dto/create-user.dto';
-import { UserService } from 'src/api/v1/user/user.service';
+import { User } from '../user/entities/user.entity';
+import { CreateUserDto } from '../user/dto/create-user.dto';
+import { UserService } from '../user/user.service';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { FindUsernameDto } from './dto/find-username.dto';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';

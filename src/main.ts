@@ -1,16 +1,14 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import expressBasicAuth from 'express-basic-auth';
 import helmet from 'helmet';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
 import cookieParser from 'cookie-parser';
-import { AccessToken, RefreshToken } from './constants/constants';
 import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
 import { TypeormExceptionFilter } from './typeorm-exception/typeorm-exception.filter';
 import { SslMiddleware } from './ssl/ssl.middleware';
-
-const documentEndpoint = process.env.SWAGGER_ENDPOINT;
+import { setupSwagger } from './swagger/swagger.config';
+import { documentEndpoint } from './constants/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -35,7 +33,7 @@ async function bootstrap() {
   app.useGlobalFilters(new TypeormExceptionFilter());
   process.env.NODE_ENV === 'production'
     ? app.use(
-        [documentEndpoint],
+        [`${documentEndpoint}/v1`, `${documentEndpoint}/v2`],
         expressBasicAuth({
           challenge: true,
           users: {
@@ -44,36 +42,23 @@ async function bootstrap() {
         }),
       )
     : undefined;
-  const config = new DocumentBuilder()
-    .setTitle('박차고 API')
-    .setDescription('박차고 API 문서입니다.')
-    .setVersion('0.0.1')
-    .addCookieAuth(
-      AccessToken,
-      {
-        type: 'apiKey',
+
+  app.use(
+    [`${documentEndpoint}/v1`, `${documentEndpoint}/v2`],
+    expressBasicAuth({
+      challenge: true,
+      users: {
+        [process.env.SWAGGER_USERNAME]: process.env.SWAGGER_PASSWORD,
       },
-      AccessToken,
-    )
-    .addCookieAuth(
-      RefreshToken,
-      {
-        type: 'apiKey',
-      },
-      RefreshToken,
-    )
-    .build();
+    }),
+  );
 
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
   });
 
-  const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(documentEndpoint, app, document, {
-    customSiteTitle:
-      process.env.NODE_ENV === 'production' ? '박차고 API' : '박차고 API - dev',
-  });
+  setupSwagger(app);
   await app.listen(3000);
 }
 bootstrap();
