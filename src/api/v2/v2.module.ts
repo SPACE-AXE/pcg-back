@@ -9,13 +9,13 @@ import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
+    UserModule,
     AuthModule,
-    CarModule,
-    MapModule,
     ParkModule,
+    CarModule,
     ParkingTransactionModule,
     PaymentModule,
-    UserModule,
+    MapModule,
   ],
 })
 export class V2Module {}
