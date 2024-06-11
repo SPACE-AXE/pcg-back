@@ -4,7 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './entities/user.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { FindUsernameDto } from '../auth/dto/find-username.dto';
 import { ResetEmailDto } from '../auth/dto/reset-email.dto';
@@ -57,7 +57,7 @@ export class UserService {
 
   async findOneByUserName(username: string) {
     return await this.userRepository.findOne({
-      where: { username },
+      where: { username, deletedAt: IsNull() },
       select: {
         username: true,
         password: true,
