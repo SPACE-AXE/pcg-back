@@ -5,7 +5,7 @@ import {
   Column,
   Entity,
   JoinColumn,
-  OneToOne,
+  ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import crypto from 'crypto';
@@ -25,7 +25,10 @@ export class Card {
   @Column({ length: 2, name: 'expiry_month' })
   expiryMonth: string;
 
-  @OneToOne(() => User, (user) => user.card, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.card, {
+    onDelete: 'CASCADE',
+    nullable: false,
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
