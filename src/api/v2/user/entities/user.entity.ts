@@ -5,6 +5,7 @@ import {
   AfterLoad,
   Column,
   Entity,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -38,7 +39,7 @@ export class User {
   @OneToOne(() => EmailToken, (emailToken) => emailToken.user)
   emailToken: EmailToken;
 
-  @OneToOne(() => Card, (card) => card.user)
+  @OneToMany(() => Card, (card) => card.user)
   card: Card;
 
   @AfterLoad()
