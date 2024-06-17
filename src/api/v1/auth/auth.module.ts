@@ -5,7 +5,7 @@ import { UserService } from '../user/user.service';
 import { LocalStrategy } from './local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
-import { JwtModule, JwtService } from '@nestjs/jwt';
+import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { EmailToken } from './entities/email-token.entity';
@@ -14,7 +14,6 @@ import { EmailToken } from './entities/email-token.entity';
   imports: [
     UserModule,
     PassportModule,
-    JwtModule.register({ global: true }),
     TypeOrmModule.forFeature([User, EmailToken]),
   ],
   providers: [AuthService, UserService, LocalStrategy, JwtService],
