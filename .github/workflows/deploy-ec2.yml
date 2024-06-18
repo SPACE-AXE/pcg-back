@@ -28,9 +28,7 @@ jobs:
             source ~/.nvm/nvm.sh
             cd /home/ubuntu/pcg && \
             git stash && \
-            pm2 delete pcg && \
             git pull -f origin main && \
             bun i && \
             bun run typeorm:migrate:run && \
-            bun run build && \
-            pm2 start --name pcg bun -- start:prod"
+            bun run build"
