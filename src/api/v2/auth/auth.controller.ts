@@ -18,6 +18,7 @@ import {
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
+  ApiForbiddenResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
@@ -34,6 +35,8 @@ import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
 import { LoginDto } from './dto/login.dto';
 import LoginResponseDto from './dto/login-response.dto';
+import { JwtAuthGuard } from './jwt-auth.guard';
+import { UserResponseDto } from '../user/dto/user-response.dto';
 
 @Controller({ path: 'auth', version: '2' })
 @ApiTags('인증')
@@ -67,6 +70,17 @@ export class AuthController {
   @ApiConflictResponse({ description: '특정 항목 중복' })
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @Post('validate')
+  @ApiOperation({ summary: '토큰 검증' })
+  @ApiOkResponse({ description: '토큰 유효', type: UserResponseDto })
+  @ApiUnauthorizedResponse({ description: '토큰 만료' })
+  @ApiForbiddenResponse({ description: '토큰 없음' })
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(200)
+  async validate(@Req() req: Request) {
+    return req.user;
   }
 
   @Get('check-username-duplicate/:username')
