@@ -8,10 +8,9 @@ import {
   Patch,
   Post,
   Req,
-  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import {
@@ -29,7 +28,6 @@ import {
 import { User } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
-import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { FindUsernameDto } from './dto/find-username.dto';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
@@ -51,17 +49,19 @@ export class AuthController {
   @HttpCode(200)
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
-    description: '로그인 성공 (토큰은 쿠키로 발급)',
+    description: '로그인 성공',
     type: LoginResponseDto,
   })
   @ApiUnauthorizedResponse({ description: '아이디 또는 비밀번호 틀림' })
-  async login(@Req() req: Request, @Res() res: Response) {
+  async login(@Req() req: Request) {
     const userData = req.user as User;
-    const { user, ...tokens } = await this.authService.login(userData);
-    res
-      .cookie(AccessToken, tokens.accessToken, { httpOnly: true })
-      .cookie(RefreshToken, tokens.refreshToken, { httpOnly: true })
-      .send(user);
+    const { user, accessToken, refreshToken } =
+      await this.authService.login(userData);
+    return {
+      user,
+      accessToken,
+      refreshToken,
+    };
   }
 
   @Post('register')

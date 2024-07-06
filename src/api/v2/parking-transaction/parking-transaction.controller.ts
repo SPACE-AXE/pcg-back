@@ -13,7 +13,7 @@ import { ParkingTransactionService } from './parking-transaction.service';
 import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dto';
 import {
   ApiConflictResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiForbiddenResponse,
   ApiHeader,
@@ -145,8 +145,8 @@ export class ParkingTransactionController {
   @Get()
   @ApiOperation({ summary: '회원 입/출차 내역 조회' })
   @UseGuards(JwtAuthGuard)
-  @ApiCookieAuth(AccessToken)
-  @ApiCookieAuth(RefreshToken)
+  @ApiBearerAuth(AccessToken)
+  @ApiBearerAuth(RefreshToken)
   @ApiOkResponse({
     description: '입출차 내역 조회 성공',
     type: ParkingTransactionResponseDto,
@@ -163,8 +163,8 @@ export class ParkingTransactionController {
     description: '결제가 되어있지 않은 모든 차량을 조회합니다. ',
   })
   @UseGuards(JwtAuthGuard)
-  @ApiCookieAuth(AccessToken)
-  @ApiCookieAuth(RefreshToken)
+  @ApiBearerAuth(AccessToken)
+  @ApiBearerAuth(RefreshToken)
   @ApiOkResponse({
     description: '현재 주차 중인 차량 조회 성공',
     type: CurrentParkingTransactionResponseDto,
