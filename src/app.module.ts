@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ThrottlerModule } from '@nestjs/throttler';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import typeORMConfig from './config/typeorm.config';
 import { ConfigModule } from '@nestjs/config';
 import { V1Module } from './api/v1/v1.module';
 import { V2Module } from './api/v2/v2.module';
@@ -22,7 +20,6 @@ import { JwtModule } from '@nestjs/jwt';
     JwtModule.register({
       global: true,
     }),
-    TypeOrmModule.forRoot(typeORMConfig),
     V1Module,
     V2Module,
   ],
