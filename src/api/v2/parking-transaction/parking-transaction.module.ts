@@ -7,7 +7,7 @@ import { UserService } from '../user/user.service';
 import { UserModule } from '../user/user.module';
 import { Car } from '../car/entities/car.entity';
 import { ParkModule } from '../park/park.module';
-import { DatabaseModule } from '../database/database.module';
+import { DatabaseModule } from '../../../database/database.module';
 import { ParkService } from '../park/park.service';
 import { Park } from '../park/entities/park.entity';
 
