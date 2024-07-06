@@ -15,7 +15,7 @@ import { Request } from 'express';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -28,8 +28,8 @@ import { PayDto } from './dto/pay.dto';
 
 @Controller({ path: 'payment', version: '2' })
 @UseGuards(JwtAuthGuard)
-@ApiCookieAuth(AccessToken)
-@ApiCookieAuth(RefreshToken)
+@ApiBearerAuth(AccessToken)
+@ApiBearerAuth(RefreshToken)
 @ApiTags('결제')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
