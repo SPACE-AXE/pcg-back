@@ -19,11 +19,15 @@ export class JwtAuthGuard implements CanActivate {
     private readonly configService: ConfigService,
   ) {}
   async canActivate(context: ExecutionContext) {
-    const request = context.switchToHttp().getRequest() as Request;
-    const response = context.switchToHttp().getResponse() as Response;
+    const request = context.switchToHttp().getRequest<Request>();
+    const response = context.switchToHttp().getResponse<Response>();
 
-    const accessToken = request.cookies[AccessToken];
-    const refreshToken = request.cookies[RefreshToken];
+    const accessToken = Array.isArray(request.headers[AccessToken])
+      ? request.headers[AccessToken][0]
+      : request.headers[AccessToken];
+    const refreshToken = Array.isArray(request.headers[RefreshToken])
+      ? request.headers[RefreshToken][0]
+      : request.headers[RefreshToken];
 
     if (!accessToken || !refreshToken)
       throw new ForbiddenException('Token not found');

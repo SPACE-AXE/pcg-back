@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import {
   ApiBadRequestResponse,
   ApiConflictResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -18,8 +18,8 @@ import { UserResponseDto } from './dto/user-response.dto';
 
 @Controller({ path: 'user', version: '2' })
 @ApiTags('사용자')
-@ApiCookieAuth(AccessToken)
-@ApiCookieAuth(RefreshToken)
+@ApiBearerAuth(AccessToken)
+@ApiBearerAuth(RefreshToken)
 @UseGuards(JwtAuthGuard)
 @ApiUnauthorizedResponse({ description: '토큰 만료' })
 @ApiBadRequestResponse({ description: '입력값 오류' })

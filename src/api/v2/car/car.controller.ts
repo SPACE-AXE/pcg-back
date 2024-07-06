@@ -12,7 +12,7 @@ import { CarService } from './car.service';
 import { CreateCarDto } from './dto/create-car.dto';
 import {
   ApiBadRequestResponse,
-  ApiCookieAuth,
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
@@ -26,8 +26,8 @@ import { CarResponseDto } from './dto/car-response.dto';
 
 @Controller({ path: 'car', version: '2' })
 @ApiTags('차량')
-@ApiCookieAuth(AccessToken)
-@ApiCookieAuth(RefreshToken)
+@ApiBearerAuth(AccessToken)
+@ApiBearerAuth(RefreshToken)
 @UseGuards(JwtAuthGuard)
 @ApiBadRequestResponse({ description: '입력값 오류' })
 @ApiUnauthorizedResponse({ description: '토큰 만료' })

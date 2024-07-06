@@ -39,20 +39,8 @@ export function createV2SwaggerDocument(app: INestApplication) {
     .setTitle('박차고 API')
     .setDescription('박차고 API v2 문서입니다.')
     .setVersion('1.0.0')
-    .addCookieAuth(
-      AccessToken,
-      {
-        type: 'apiKey',
-      },
-      AccessToken,
-    )
-    .addCookieAuth(
-      RefreshToken,
-      {
-        type: 'apiKey',
-      },
-      RefreshToken,
-    )
+    .addBearerAuth({ name: AccessToken, type: 'http' }, AccessToken)
+    .addBearerAuth({ name: RefreshToken, type: 'http' }, RefreshToken)
     .build();
   return SwaggerModule.createDocument(app, config, {
     include: [V2Module],
