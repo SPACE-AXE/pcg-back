@@ -7,7 +7,7 @@ import { UserService } from '../user/user.service';
 import { ParkingTransactionService } from '../parking-transaction/parking-transaction.service';
 import { ParkingTransaction } from '../parking-transaction/entities/parking-transaction.entity';
 import { Car } from '../car/entities/car.entity';
-import { DatabaseModule } from '../database/database.module';
+import { DatabaseModule } from '../../../database/database.module';
 
 @Module({
   imports: [DatabaseModule.forFeature([Card, User, ParkingTransaction, Car])],

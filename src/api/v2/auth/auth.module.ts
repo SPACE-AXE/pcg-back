@@ -8,7 +8,7 @@ import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '../user/entities/user.entity';
 import { EmailToken } from './entities/email-token.entity';
-import { DatabaseModule } from '../database/database.module';
+import { DatabaseModule } from '../../../database/database.module';
 
 @Module({
   imports: [

@@ -6,7 +6,7 @@ import { ParkModule } from './park/park.module';
 import { ParkingTransactionModule } from './parking-transaction/parking-transaction.module';
 import { PaymentModule } from './payment/payment.module';
 import { UserModule } from './user/user.module';
-import { DatabaseModule } from './database/database.module';
+import { DatabaseModule } from '../../database/database.module';
 
 @Module({
   imports: [
