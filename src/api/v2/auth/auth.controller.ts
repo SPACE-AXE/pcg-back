@@ -14,6 +14,7 @@ import { Request } from 'express';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import {
+  ApiBearerAuth,
   ApiBody,
   ApiConflictResponse,
   ApiCreatedResponse,
@@ -35,6 +36,7 @@ import { LoginDto } from './dto/login.dto';
 import LoginResponseDto from './dto/login-response.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserResponseDto } from '../user/dto/user-response.dto';
+import { AccessToken, RefreshToken } from 'src/constants/constants';
 
 @Controller({ path: 'auth', version: '2' })
 @ApiTags('인증')
@@ -78,6 +80,8 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   @ApiForbiddenResponse({ description: '토큰 없음' })
   @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth(AccessToken)
+  @ApiBearerAuth(RefreshToken)
   @HttpCode(200)
   async validate(@Req() req: Request) {
     return req.user;
