@@ -8,7 +8,11 @@ import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
 import { TypeormExceptionFilter } from './typeorm-exception/typeorm-exception.filter';
 import { SslMiddleware } from './ssl/ssl.middleware';
 import { setupSwagger } from './swagger/swagger.config';
-import { documentEndpoint } from './constants/constants';
+import {
+  AccessToken,
+  documentEndpoint,
+  RefreshToken,
+} from './constants/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -19,6 +23,7 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
     credentials: true,
+    exposedHeaders: [AccessToken, RefreshToken],
   });
   app.use(helmet());
   app.use(cookieParser());
