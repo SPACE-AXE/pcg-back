@@ -54,11 +54,9 @@ export class JwtAuthGuard implements CanActivate {
           { secret: this.configService.get('JWT_SECRET'), expiresIn: '1h' },
         );
         request.user = user;
-        response.cookie(AccessToken, newAccessToken, { httpOnly: true });
+        response.header(AccessToken, newAccessToken);
         return true;
       } catch (refreshTokenError) {
-        response.clearCookie(AccessToken);
-        response.clearCookie(RefreshToken);
         throw new UnauthorizedException('Token expired');
       }
     }
