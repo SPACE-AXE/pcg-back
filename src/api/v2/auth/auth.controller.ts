@@ -8,9 +8,10 @@ import {
   Patch,
   Post,
   Req,
+  Res,
   UseGuards,
 } from '@nestjs/common';
-import { Request } from 'express';
+import { Request, Response } from 'express';
 import { LocalAuthGuard } from './local-auth.guard';
 import { AuthService } from './auth.service';
 import {
@@ -26,7 +27,6 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { FindUsernameDto } from './dto/find-username.dto';
@@ -51,19 +51,18 @@ export class AuthController {
   @HttpCode(200)
   @ApiBody({ type: LoginDto })
   @ApiOkResponse({
-    description: '로그인 성공',
+    description: '로그인 성공 (헤더에 토큰 발급)',
     type: LoginResponseDto,
   })
   @ApiUnauthorizedResponse({ description: '아이디 또는 비밀번호 틀림' })
-  async login(@Req() req: Request) {
-    const userData = req.user as User;
+  async login(@Req() req: Request, @Res() res: Response) {
+    const userData = req.user;
     const { user, accessToken, refreshToken } =
       await this.authService.login(userData);
-    return {
-      user,
-      accessToken,
-      refreshToken,
-    };
+    res
+      .setHeader(AccessToken, accessToken)
+      .setHeader(RefreshToken, refreshToken)
+      .send(user);
   }
 
   @Post('register')

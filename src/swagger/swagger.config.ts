@@ -8,7 +8,7 @@ import {
   documentEndpoint,
 } from 'src/constants/constants';
 
-export function createV1SwaggerDocument(app: INestApplication) {
+function createV1SwaggerDocument(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('박차고 API')
     .setDescription('박차고 API v1 문서입니다.')
@@ -34,13 +34,16 @@ export function createV1SwaggerDocument(app: INestApplication) {
   });
 }
 
-export function createV2SwaggerDocument(app: INestApplication) {
+function createV2SwaggerDocument(app: INestApplication) {
   const config = new DocumentBuilder()
     .setTitle('박차고 API')
     .setDescription('박차고 API v2 문서입니다.')
     .setVersion('1.0.0')
-    .addBearerAuth({ name: AccessToken, type: 'http' }, AccessToken)
-    .addBearerAuth({ name: RefreshToken, type: 'http' }, RefreshToken)
+    .addApiKey({ type: 'apiKey', name: AccessToken, in: 'header' }, AccessToken)
+    .addApiKey(
+      { type: 'apiKey', name: RefreshToken, in: 'header' },
+      RefreshToken,
+    )
     .build();
   return SwaggerModule.createDocument(app, config, {
     include: [V2Module],

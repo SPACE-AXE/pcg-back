@@ -6,6 +6,8 @@ import { ConfigModule } from '@nestjs/config';
 import { V1Module } from './api/v1/v1.module';
 import { V2Module } from './api/v2/v2.module';
 import { JwtModule } from '@nestjs/jwt';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { TokenRefreshInterceptor } from './api/v2/token-refresh/token-refresh.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -24,6 +26,12 @@ import { JwtModule } from '@nestjs/jwt';
     V2Module,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TokenRefreshInterceptor,
+    },
+  ],
 })
 export class AppModule {}

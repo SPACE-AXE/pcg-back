@@ -5,6 +5,7 @@ declare global {
     export interface User extends UserEntity {}
     export interface Request {
       park?: ParkEntity;
+      needTokenRefresh?: boolean;
     }
   }
 }
