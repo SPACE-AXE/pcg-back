@@ -15,6 +15,7 @@ import { EmailToken } from './entities/email-token.entity';
 import { LessThan, Repository } from 'typeorm';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { TokenDto } from './dto/token.dto';
 
 @Injectable()
 export class AuthService {
@@ -100,11 +101,14 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = {
-      username: user.username,
-      id: user.id,
-      nickname: user.nickname,
-    };
+    const payload = Object.assign(
+      {},
+      new TokenDto({
+        username: user.username,
+        id: user.id,
+        nickname: user.nickname,
+      }),
+    );
 
     const accessToken = await this.jwtService.signAsync(payload, {
       expiresIn: '1h',

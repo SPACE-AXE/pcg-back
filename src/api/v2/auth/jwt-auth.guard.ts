@@ -7,9 +7,10 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { Request, Response } from 'express';
+import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserService } from '../user/user.service';
+import { TokenDto } from './dto/token.dto';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -20,7 +21,6 @@ export class JwtAuthGuard implements CanActivate {
   ) {}
   async canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest<Request>();
-    const response = context.switchToHttp().getResponse<Response>();
 
     const accessToken = Array.isArray(request.headers[AccessToken])
       ? request.headers[AccessToken][0]
@@ -33,7 +33,7 @@ export class JwtAuthGuard implements CanActivate {
       throw new ForbiddenException('Token not found');
 
     try {
-      const decodedAccessToken = this.jwtService.verify(accessToken, {
+      const decodedAccessToken: TokenDto = this.jwtService.verify(accessToken, {
         secret: this.configService.get('JWT_SECRET'),
       });
       const user = await this.userService.findOneById(decodedAccessToken.id);
@@ -45,16 +45,8 @@ export class JwtAuthGuard implements CanActivate {
           secret: this.configService.get('JWT_SECRET'),
         });
         const user = await this.userService.findOneById(decodedRefreshToken.id);
-        const newAccessToken = this.jwtService.sign(
-          {
-            username: decodedRefreshToken.username,
-            id: decodedRefreshToken.id,
-            nickname: decodedRefreshToken.nickname,
-          },
-          { secret: this.configService.get('JWT_SECRET'), expiresIn: '1h' },
-        );
         request.user = user;
-        response.header(AccessToken, newAccessToken);
+        request.needTokenRefresh = true;
         return true;
       } catch (refreshTokenError) {
         throw new UnauthorizedException('Token expired');
