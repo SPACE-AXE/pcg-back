@@ -29,6 +29,6 @@ jobs:
             cd /home/ubuntu/pcg && \
             git stash && \
             git pull -f origin main && \
-            bun i --production && \
+            bun i && \
             bun run typeorm:migrate:run && \
             bun run build"
