@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import * as fs from 'fs';
@@ -18,6 +22,10 @@ export class MapService {
         },
       },
     );
+
+    if (addr.data.results.legnth === 0) {
+      throw new NotFoundException('Park Data Not Found!!');
+    }
     const slicedAddr = addr.data.results[0].region.area2.name;
 
     const jsonData = fs.readFileSync('code.json', 'utf-8');
@@ -70,7 +78,7 @@ export class MapService {
       });
       return filteredItems;
     } catch (error) {
-      throw new Error(`Failed to fetch data from API: ${error}`);
+      throw new BadRequestException(`Failed to fetch data from API: ${error}`);
     }
   }
 
@@ -78,66 +86,80 @@ export class MapService {
     const apiKeyId = this.configService.get<string>('NAVER_MAP_ID');
     const apiKey = this.configService.get<string>('NAVER_MAP_SECRET');
 
-    const response = await axios.get(
-      `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${addr}`,
-      {
-        headers: {
-          'X-NCP-APIGW-API-KEY-ID': apiKeyId,
-          'X-NCP-APIGW-API-KEY': apiKey,
+    try {
+      const response = await axios.get(
+        `https://naveropenapi.apigw.ntruss.com/map-geocode/v2/geocode?query=${addr}`,
+        {
+          headers: {
+            'X-NCP-APIGW-API-KEY-ID': apiKeyId,
+            'X-NCP-APIGW-API-KEY': apiKey,
+          },
         },
-      },
-    );
-    return response.data.addresses[0];
+      );
+      return response.data.addresses[0];
+    } catch (error) {
+      throw new NotFoundException('Addr Not Found');
+    }
   }
 
   async placeToLatLng(place: string) {
-    const response = await axios.get(
-      `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${this.configService.get<string>('GET_ADDR_KEY')}`,
-      {
-        params: {
-          currentPAge: 1,
-          countPerPage: 1,
-          keyword: place,
-          resultType: 'json',
+    try {
+      const response = await axios.get(
+        `https://business.juso.go.kr/addrlink/addrLinkApi.do?confmKey=${this.configService.get<string>('GET_ADDR_KEY')}`,
+        {
+          params: {
+            currentPAge: 1,
+            countPerPage: 1,
+            keyword: place,
+            resultType: 'json',
+          },
         },
-      },
-    );
-    return await this.addrToLatLng(response.data.results.juso[0].roadAddrPart1);
+      );
+      return await this.addrToLatLng(
+        response.data.results.juso[0].roadAddrPart1,
+      );
+    } catch (error) {
+      throw new NotFoundException('Place Not Found');
+    }
   }
 
   async getParkInfo(name: string) {
-    const apiUrl = `http://api.data.go.kr/openapi/tn_pubr_prkplce_info_api?serviceKey=${this.configService.get('PUBLIC_DATA_ID')}&pageNo=1&numOfRows=100&type=json&prkplceNm=${name}`;
-    const response = await axios.get(apiUrl);
-    const data = response.data.response.body.items[0];
+    try {
+      const apiUrl = `http://api.data.go.kr/openapi/tn_pubr_prkplce_info_api?serviceKey=${this.configService.get('PUBLIC_DATA_ID')}&pageNo=1&numOfRows=100&type=json&prkplceNm=${name}`;
+      const response = await axios.get(apiUrl);
+      const data = response.data.response.body.items[0];
 
-    const time = {
-      weekdayOpenAt: data.weekdayOperOpenHhmm,
-      weekdayCloseAt: data.weekdayOperColseHhmm,
-      satOpenAt: data.satOperOperOpenHhmm,
-      satCloseAt: data.satOperCloseHhmm,
-      holidayOpenAt: data.holidayOperOpenHhmm,
-      holidayCloseAt: data.holidayCloseOpenHhmm,
-    };
+      const time = {
+        weekdayOpenAt: data.weekdayOperOpenHhmm,
+        weekdayCloseAt: data.weekdayOperColseHhmm,
+        satOpenAt: data.satOperOperOpenHhmm,
+        satCloseAt: data.satOperCloseHhmm,
+        holidayOpenAt: data.holidayOperOpenHhmm,
+        holidayCloseAt: data.holidayCloseOpenHhmm,
+      };
 
-    const price = {
-      baseTime: data.basicTime,
-      basePrice: data.basicCharge,
-      unitTime: data.addUnitTime,
-      unitPrice: data.addUnitCharge,
-      datTime: data.dayCmmtktAdjTime,
-      dayPrice: data.dayCmmtkt,
-      monthPrice: data.monthCmmtkt,
-    };
+      const price = {
+        baseTime: data.basicTime,
+        basePrice: data.basicCharge,
+        unitTime: data.addUnitTime,
+        unitPrice: data.addUnitCharge,
+        datTime: data.dayCmmtktAdjTime,
+        dayPrice: data.dayCmmtkt,
+        monthPrice: data.monthCmmtkt,
+      };
 
-    const processedData = {
-      name: data.prkplceNm,
-      addr: data.rdnmadr ? data.rdnmadr : data.lnmadr,
-      space: data.prkcmprt,
-      disabled: data.pwdbsPpkZoneYn,
-      time: time,
-      price: price,
-    };
+      const processedData = {
+        name: data.prkplceNm,
+        addr: data.rdnmadr ? data.rdnmadr : data.lnmadr,
+        space: data.prkcmprt,
+        disabled: data.pwdbsPpkZoneYn,
+        time: time,
+        price: price,
+      };
 
-    return processedData;
+      return processedData;
+    } catch (error) {
+      throw new NotFoundException('Park Info Not Found');
+    }
   }
 }
