@@ -36,11 +36,6 @@ export class UserController {
     return this.userService.findOneById(req.user.id);
   }
 
-  @Get('test')
-  test() {
-    return 'ok';
-  }
-
   @Patch()
   @ApiOperation({ summary: '유저 정보 수정' })
   @ApiOkResponse({ description: '유저 정보 수정 완료' })
