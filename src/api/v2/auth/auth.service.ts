@@ -15,7 +15,6 @@ import { EmailToken } from './entities/email-token.entity';
 import { LessThan, Repository } from 'typeorm';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
-import { TokenDto } from './dto/token.dto';
 
 @Injectable()
 export class AuthService {
@@ -28,7 +27,7 @@ export class AuthService {
   ) {}
 
   async sendResetEmail(body: ResetEmailDto) {
-    const user = await this.userService.findOneByUserNameAndEmail(body);
+    const user = await this.userService.findOneByUsernameAndEmail(body);
     if (!user) {
       throw new NotFoundException('Username or email is not valid');
     }
@@ -92,7 +91,7 @@ export class AuthService {
   }
 
   async validateUser(username: string, password: string) {
-    const user = await this.userService.findOneByUserName(username);
+    const user = await this.userService.findOneByUsername(username);
     if (user && bcrypt.compareSync(password, user.password)) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
@@ -101,20 +100,11 @@ export class AuthService {
   }
 
   async login(user: User) {
-    const payload = Object.assign(
-      {},
-      new TokenDto({
-        username: user.username,
-        id: user.id,
-        nickname: user.nickname,
-      }),
-    );
-
-    const accessToken = await this.jwtService.signAsync(payload, {
+    const accessToken = await this.jwtService.signAsync(user, {
       expiresIn: '1h',
       secret: this.configService.get('JWT_SECRET'),
     });
-    const refreshToken = await this.jwtService.signAsync(payload, {
+    const refreshToken = await this.jwtService.signAsync(user, {
       expiresIn: '7d',
       secret: this.configService.get('JWT_SECRET'),
     });

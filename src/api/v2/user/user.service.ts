@@ -28,7 +28,7 @@ export class UserService {
     else throw new NotFoundException('User not found');
   }
 
-  async findOneByUserNameAndEmail(resetEmailDto: ResetEmailDto) {
+  async findOneByUsernameAndEmail(resetEmailDto: ResetEmailDto) {
     const user = await this.userRepository.findOne({
       where: { username: resetEmailDto.username, email: resetEmailDto.email },
     });
@@ -55,7 +55,7 @@ export class UserService {
     return await this.userRepository.update(id, updateUserDto);
   }
 
-  async findOneByUserName(username: string) {
+  async findOneByUsername(username: string) {
     return await this.userRepository.findOne({
       where: { username, deletedAt: IsNull() },
       select: {
@@ -63,9 +63,6 @@ export class UserService {
         password: true,
         id: true,
         email: true,
-        name: true,
-        createdAt: true,
-        deletedAt: true,
         nickname: true,
       },
     });
