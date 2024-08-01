@@ -6,11 +6,10 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { JwtService } from '@nestjs/jwt';
+import { JsonWebTokenError, JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserService } from '../user/user.service';
-import { TokenDto } from './dto/token.dto';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
@@ -33,19 +32,23 @@ export class JwtAuthGuard implements CanActivate {
       throw new ForbiddenException('Token not found');
 
     try {
-      const decodedAccessToken: TokenDto = this.jwtService.verify(accessToken, {
+      const decodedAccessToken = this.jwtService.verify(accessToken, {
         secret: this.configService.get('JWT_SECRET'),
       });
-      const user = await this.userService.findOneById(decodedAccessToken.id);
-      request.user = user;
+
+      request.user = decodedAccessToken;
       return true;
     } catch (accessTokenError) {
+      if (
+        accessTokenError instanceof JsonWebTokenError &&
+        accessTokenError.message == 'invalid signature'
+      )
+        throw new UnauthorizedException('Invalid Signature');
       try {
         const decodedRefreshToken = this.jwtService.verify(refreshToken, {
           secret: this.configService.get('JWT_SECRET'),
         });
-        const user = await this.userService.findOneById(decodedRefreshToken.id);
-        request.user = user;
+        request.user = decodedRefreshToken;
         request.needTokenRefresh = true;
         return true;
       } catch (refreshTokenError) {
