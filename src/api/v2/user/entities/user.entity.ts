@@ -30,10 +30,20 @@ export class User {
   @Column({ length: 200, select: false })
   password: string;
 
-  @Column({ name: 'created_at', type: 'datetime', nullable: false })
+  @Column({
+    name: 'created_at',
+    type: 'datetime',
+    nullable: false,
+    select: false,
+  })
   createdAt: Date;
 
-  @Column({ name: 'deleted_at', type: 'datetime', nullable: true })
+  @Column({
+    name: 'deleted_at',
+    type: 'datetime',
+    nullable: true,
+    select: false,
+  })
   deletedAt: Date;
 
   @OneToOne(() => EmailToken, (emailToken) => emailToken.user)
