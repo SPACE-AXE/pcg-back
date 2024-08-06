@@ -151,7 +151,7 @@ export class PaymentService {
   ): number {
     const exitTimeInKST = new Date(exitTime.getTime() + KR_TIME_DIFF);
     const parkingTimeInMilliseconds =
-      exitTimeInKST.getTime() - parkingTransaction.entryTime.getTime();
+      exitTimeInKST.getTime() - parkingTransaction.entryTime;
     const parkingTimeInMinutes = parkingTimeInMilliseconds / 1000 / 60;
 
     return Math.floor(parkingTimeInMinutes * PARKING_FEE_PER_MINUTE);
@@ -172,7 +172,7 @@ export class PaymentService {
       },
       {
         isPaid: true,
-        paymentTime: new Date(),
+        paymentTime: Date.now(),
         parkingAmount,
         totalAmount,
       },
