@@ -51,7 +51,7 @@ export class ParkingTransactionService {
       park: { id: parkId },
       carNum: createParkingTransactionDto.carNum,
       paymentId,
-      entryTime: new Date(),
+      entryTime: createParkingTransactionDto.timestamp,
     });
 
     await this.parkingTransactionRepository.insert(newParkingTransaction);
@@ -82,7 +82,7 @@ export class ParkingTransactionService {
     return this.parkingTransactionRepository.update(
       { id: parkingTransaction.id },
       {
-        exitTime: new Date(),
+        exitTime: createParkingTransactionDto.timestamp,
       },
     );
   }
@@ -110,7 +110,7 @@ export class ParkingTransactionService {
     return this.parkingTransactionRepository.update(
       { id: parkingTransaction.id },
       {
-        chargeStartTime: new Date(),
+        chargeStartTime: createParkingTransactionDto.timestamp,
       },
     );
   }
@@ -151,12 +151,9 @@ export class ParkingTransactionService {
   }
 
   private getChargeTime(parkingTransaction: ParkingTransaction): number {
-    return (
-      (new Date().getTime() +
-        KR_TIME_DIFF -
-        parkingTransaction.chargeStartTime.getTime()) /
-      1000
-    );
+    const chargeTime =
+      (Date.now() + KR_TIME_DIFF - parkingTransaction.chargeStartTime) / 1000;
+    return chargeTime;
   }
 
   findAll(user: User) {
@@ -178,7 +175,7 @@ export class ParkingTransactionService {
 
     parkedCars.forEach((parkedCar) => {
       parkedCar.currentParkingTime = Math.floor(
-        (new Date().getTime() - parkedCar.entryTime.getTime()) / 1000,
+        (new Date().getTime() - parkedCar.entryTime) / 1000,
       );
     });
 
