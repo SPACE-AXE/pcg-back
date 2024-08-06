@@ -3,7 +3,7 @@ import { AxiosError } from 'axios';
 
 @Catch(AxiosError)
 export class AxiosExceptionFilter implements ExceptionFilter {
-  constructor(private readonly logger: Logger) {}
+  private readonly logger = new Logger(AxiosExceptionFilter.name);
   catch(exception: AxiosError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
