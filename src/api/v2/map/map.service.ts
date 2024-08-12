@@ -23,9 +23,10 @@ export class MapService {
       },
     );
 
-    if (!addr.data.results)
+    if (!addr.data.results) {
       throw new NotFoundException('Park Data Not Found!!');
     }
+
     const slicedAddr = addr.data.results[0].region.area2.name;
 
     const jsonData = fs.readFileSync('code.json', 'utf-8');
