@@ -2,16 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { MapService } from './map.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
+jest.setTimeout(60000);
+
 describe('MapService', () => {
   let service: MapService;
-
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule],
       providers: [MapService, ConfigService],
     }).compile();
 
-    jest.setTimeout(60000);
     service = module.get<MapService>(MapService);
   });
 
@@ -37,9 +37,9 @@ describe('MapService', () => {
     ).toBeDefined();
   });
 
-  // it('getParkInfo', async () => {
-  //   expect(await service.getParkInfo('비산동사무소')).toBeDefined();
-  // });
+  it('getParkInfo', async () => {
+    expect(await service.getParkInfo('비산동사무소')).toBeDefined();
+  });
 
   it('placeToLatLng', async () => {
     expect(await service.placeToLatLng('대구역')).toBeDefined();
