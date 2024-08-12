@@ -8,11 +8,7 @@ import { AxiosExceptionFilter } from './axios-exception/axios-exception.filter';
 import { TypeormExceptionFilter } from './typeorm-exception/typeorm-exception.filter';
 import { SslMiddleware } from './ssl/ssl.middleware';
 import { setupSwagger } from './swagger/swagger.config';
-import {
-  AccessToken,
-  documentEndpoint,
-  RefreshToken,
-} from './constants/constants';
+import { documentEndpoint } from './constants/constants';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -20,12 +16,31 @@ async function bootstrap() {
     ? app.use(new SslMiddleware().use)
     : undefined;
 
-  app.enableCors({
-    origin: '*',
-    credentials: true,
-    exposedHeaders: [AccessToken, RefreshToken],
-  });
-  app.use(helmet());
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          defaultSrc: ["'self'"],
+          scriptSrc: ["'self'"],
+          styleSrc: ["'self'"],
+          imgSrc: ["'self'"],
+          connectSrc: [
+            "'self'",
+            'https://naveropenapi.apigw.ntruss.com',
+            'http://api.data.go.kr',
+            'https://business.juso.go.kr',
+            'https://api.portone.io',
+          ],
+          fontSrc: ["'self'"],
+          objectSrc: ["'none'"],
+          frameAncestors: ["'none'"],
+          baseUri: ["'self'"],
+          formAction: ["'self'"],
+          upgradeInsecureRequests: [],
+        },
+      },
+    }),
+  );
   app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
