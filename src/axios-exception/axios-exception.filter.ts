@@ -1,14 +1,15 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { AxiosError } from 'axios';
 
 @Catch(AxiosError)
 export class AxiosExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(AxiosExceptionFilter.name);
   catch(exception: AxiosError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse();
     const status = exception.response?.status;
 
-    console.error(exception);
+    this.logger.error(exception);
 
     response.status(status).json({
       statusCode: status,

@@ -1,14 +1,15 @@
-import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter, Logger } from '@nestjs/common';
 import { Response } from 'express';
 import { QueryFailedError } from 'typeorm';
 
 @Catch(QueryFailedError)
 export class TypeormExceptionFilter implements ExceptionFilter {
+  private readonly logger = new Logger(TypeormExceptionFilter.name);
   catch(exception: QueryFailedError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
 
-    console.error(exception);
+    this.logger.error(exception);
 
     if (exception.message.includes('Duplicate entry')) {
       response.status(409).json({

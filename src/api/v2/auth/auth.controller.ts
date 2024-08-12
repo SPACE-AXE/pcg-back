@@ -92,7 +92,7 @@ export class AuthController {
   @ApiOkResponse({ description: '아이디 사용 가능 (Body 없음)' })
   @ApiConflictResponse({ description: '아이디 중복' })
   async checkUserNameDuplicate(@Param('username') username: string) {
-    const user = await this.userService.findOneByUserName(username);
+    const user = await this.userService.findOneByUsername(username);
     if (!user) return;
     else throw new ConflictException('Username already exists');
   }
