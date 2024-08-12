@@ -23,7 +23,7 @@ export class MapService {
       },
     );
 
-    if (addr.data.results.legnth == undefined) {
+    if (!addr.data.results)
       throw new NotFoundException('Park Data Not Found!!');
     }
     const slicedAddr = addr.data.results[0].region.area2.name;
