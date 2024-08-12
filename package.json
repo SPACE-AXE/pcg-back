@@ -43,6 +43,7 @@
     "@types/passport-local": "^1.0.38",
     "axios": "^1.6.8",
     "bcrypt": "^5.1.1",
+    "bun": "^1.1.21",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "cookie-parser": "^1.4.6",
@@ -60,7 +61,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "swagger": "^0.7.5",
-    "typeorm": "^0.3.20"
+    "typeorm": "^0.3.20",
+    "yarn": "^1.22.22"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",
