@@ -17,13 +17,13 @@ export class MapService {
       `https://naveropenapi.apigw.ntruss.com/map-reversegeocode/v2/gc?coords=${mapBodyDto.lng},${mapBodyDto.lat}&output=json&orders=roadaddr&output=json`,
       {
         headers: {
-          'X-NCP-APIGW-API-KEY-ID': this.configService.get('NAVER_MAP_ID'),
-          'X-NCP-APIGW-API-KEY': this.configService.get('NAVER_MAP_SECRET'),
+          'X-NCP-APIGW-API-KEY-ID': 'etuftq1yhk',
+          'X-NCP-APIGW-API-KEY': 'vF1FxV7Ysy5ZfHTvrUGdF4X4I4YaX1qMFqmeKVLG',
         },
       },
     );
 
-    if (addr.data.results.legnth === 0) {
+    if (addr.data.results.legnth == undefined) {
       throw new NotFoundException('Park Data Not Found!!');
     }
     const slicedAddr = addr.data.results[0].region.area2.name;

@@ -1,7 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { MapService } from './map.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-
 jest.setTimeout(60000);
 
 describe('MapService', () => {
@@ -22,7 +21,7 @@ describe('MapService', () => {
   it('getPublicPark', async () => {
     expect(
       await service.getPublicPark({
-        lat: 36.112765,
+        lat: 30.112765,
         lng: 128.406284,
         price: 5000,
         space: 10000,
