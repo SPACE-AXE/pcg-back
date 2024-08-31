@@ -27,7 +27,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i $HOME/key.pem ubuntu@$EC2_IP "\
             source ~/.nvm/nvm.sh
             cd /home/ubuntu/pcg && \
-            git stash && \
+            git stash -k -u && \
             git pull -f origin main && \
             bun i && \
             bun run typeorm:migrate:run && \
