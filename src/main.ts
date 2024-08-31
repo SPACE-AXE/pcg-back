@@ -9,6 +9,7 @@ import { TypeormExceptionFilter } from './typeorm-exception/typeorm-exception.fi
 import { SslMiddleware } from './ssl/ssl.middleware';
 import { setupSwagger } from './swagger/swagger.config';
 import { documentEndpoint } from './constants/constants';
+import { AppLoggerMiddleware } from './app-logger/app-logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -42,6 +43,7 @@ async function bootstrap() {
     }),
   );
   app.use(cookieParser());
+  app.use(new AppLoggerMiddleware().use);
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
