@@ -54,6 +54,7 @@
     "helmet": "^7.1.0",
     "moment-timezone": "^0.5.45",
     "mysql2": "^3.9.3",
+    "nest-winston": "^1.9.7",
     "nodemailer": "^6.9.13",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
@@ -62,6 +63,8 @@
     "rxjs": "^7.8.1",
     "swagger": "^0.7.5",
     "typeorm": "^0.3.20",
+    "winston": "^3.14.2",
+    "winston-daily-rotate-file": "^5.0.0",
     "yarn": "^1.22.22"
   },
   "devDependencies": {
