@@ -10,6 +10,7 @@ module.exports = {
         'node_modules',
         'bun.lockb',
         'logs',
+        'logs/',
       ],
     },
   ],
