@@ -4,7 +4,13 @@ module.exports = {
       name: 'pcg',
       script: './dist/main.js',
       watch: true,
-      ignore_watch: ['ormlogs.log', '.git', 'node_modules', 'bun.lockb'],
+      ignore_watch: [
+        'ormlogs.log',
+        '.git',
+        'node_modules',
+        'bun.lockb',
+        'logs',
+      ],
     },
   ],
 };
