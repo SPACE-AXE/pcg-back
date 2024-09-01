@@ -10,9 +10,13 @@ import { SslMiddleware } from './ssl/ssl.middleware';
 import { setupSwagger } from './swagger/swagger.config';
 import { documentEndpoint } from './constants/constants';
 import { AppLoggerMiddleware } from './app-logger/app-logger.middleware';
+import { WinstonModule } from 'nest-winston';
+import { loggerOptions } from './logger';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    logger: WinstonModule.createLogger(loggerOptions),
+  });
   process.env.NODE_ENV === 'production'
     ? app.use(new SslMiddleware().use)
     : undefined;
