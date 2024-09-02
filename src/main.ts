@@ -12,6 +12,7 @@ import { documentEndpoint } from './constants/constants';
 import { AppLoggerMiddleware } from './app-logger/app-logger.middleware';
 import { WinstonModule } from 'nest-winston';
 import { loggerOptions } from './logger';
+import { HttpExceptionFilter } from './http-exception/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -48,6 +49,7 @@ async function bootstrap() {
   );
   app.use(cookieParser());
   app.use(new AppLoggerMiddleware().use);
+  app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
