@@ -6,15 +6,16 @@ import { LocalStrategy } from './local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../user/entities/user.entity';
+import { UserV2 } from '../user/entities/user.entity';
 import { EmailToken } from './entities/email-token.entity';
 import { DatabaseModule } from '../../../database/database.module';
+import { Park } from '../park/entities/park.entity';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
-    DatabaseModule.forFeature([User, EmailToken]),
+    DatabaseModule.forFeature([UserV2, EmailToken, Park]),
   ],
   providers: [AuthService, UserService, LocalStrategy, JwtService],
   controllers: [AuthController],

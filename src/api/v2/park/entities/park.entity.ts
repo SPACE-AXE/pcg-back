@@ -1,4 +1,6 @@
-import { Column, Entity, Point, PrimaryGeneratedColumn } from 'typeorm';
+import { Point } from 'geojson';
+import { Role } from 'src/roles/roles.enum';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('park')
 export class Park {
@@ -31,4 +33,7 @@ export class Park {
 
   @Column({ length: 20, select: false })
   ip: string;
+
+  @Column({ type: 'enum', enum: Role, default: Role.PARK })
+  role?: Role;
 }

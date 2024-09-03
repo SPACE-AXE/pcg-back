@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
-import { User } from '../user/entities/user.entity';
+import { UserV1 } from '../user/entities/user.entity';
 import { AddCreditCardDto } from './dto/add-credit-card.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Card } from './entities/card.entity';
@@ -25,7 +25,7 @@ export class PaymentService {
     private readonly parkingTransactionService: ParkingTransactionService,
   ) {}
 
-  async pay(user: User, payDto: PayDto) {
+  async pay(user: UserV1, payDto: PayDto) {
     const paymentUrl = 'https://api.portone.io';
     const card = await this.cardRepository.findOne({
       where: { user: { id: user.id } },
@@ -116,7 +116,7 @@ export class PaymentService {
     }
   }
 
-  async addCreditCard(user: User, addCreditCardDto: AddCreditCardDto) {
+  async addCreditCard(user: UserV1, addCreditCardDto: AddCreditCardDto) {
     const newCard = this.cardRepository.create({
       user,
       ...addCreditCardDto,
@@ -125,7 +125,7 @@ export class PaymentService {
     return this.cardRepository.insert(newCard);
   }
 
-  async getCreditCard(user: User) {
+  async getCreditCard(user: UserV1) {
     const card = await this.cardRepository.findOne({
       where: { user: { id: user.id } },
       select: {
@@ -141,7 +141,7 @@ export class PaymentService {
     return card;
   }
 
-  deleteCreditCard(user: User) {
+  deleteCreditCard(user: UserV1) {
     return this.cardRepository.delete({ user: { id: user.id } });
   }
 

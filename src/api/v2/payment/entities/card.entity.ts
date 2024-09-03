@@ -1,4 +1,4 @@
-import { User } from '../../user/entities/user.entity';
+import { UserV2 } from '../../user/entities/user.entity';
 import {
   AfterLoad,
   BeforeInsert,
@@ -25,12 +25,12 @@ export class Card {
   @Column({ length: 2, name: 'expiry_month' })
   expiryMonth: string;
 
-  @ManyToOne(() => User, (user) => user.card, {
+  @ManyToOne(() => UserV2, (user) => user.card, {
     onDelete: 'CASCADE',
     nullable: false,
   })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: UserV2;
 
   @BeforeInsert()
   async encryptNumber() {

@@ -1,3 +1,4 @@
+import { Role } from 'src/roles/roles.enum';
 import { EmailToken } from '../../auth/entities/email-token.entity';
 import { Card } from '../../payment/entities/card.entity';
 import { KR_TIME_DIFF } from 'src/constants/constants';
@@ -11,7 +12,7 @@ import {
 } from 'typeorm';
 
 @Entity('user')
-export class User {
+export class UserV2 {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -51,6 +52,14 @@ export class User {
 
   @OneToMany(() => Card, (card) => card.user)
   card: Card;
+
+  @Column({
+    name: 'role',
+    type: 'enum',
+    enum: Role,
+    default: Role.USER,
+  })
+  role?: Role;
 
   @AfterLoad()
   convertUSTtoKST() {

@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import bcrypt from 'bcrypt';
-import { User } from '../user/entities/user.entity';
+import { UserV2 } from '../user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import nodemailer from 'nodemailer';
@@ -15,6 +15,8 @@ import { EmailToken } from './entities/email-token.entity';
 import { LessThan, Repository } from 'typeorm';
 import { ResetEmailDto as ResetEmailDto } from './dto/reset-email.dto';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { ParkLoginDto } from 'src/api/v1/auth/dto/park.login.dto';
+import { Park } from '../park/entities/park.entity';
 
 @Injectable()
 export class AuthService {
@@ -24,6 +26,7 @@ export class AuthService {
     private readonly configService: ConfigService,
     @InjectRepository(EmailToken)
     private readonly emailTokenRepository: Repository<EmailToken>,
+    @InjectRepository(Park) private readonly parkRepository: Repository<Park>,
   ) {}
 
   async sendResetEmail(body: ResetEmailDto) {
@@ -99,7 +102,7 @@ export class AuthService {
     } else return null;
   }
 
-  async login(user: User) {
+  async login(user: UserV2) {
     const accessToken = await this.jwtService.signAsync(user, {
       expiresIn: '1h',
       secret: this.configService.get('JWT_SECRET'),
@@ -114,5 +117,36 @@ export class AuthService {
       accessToken,
       refreshToken,
     };
+  }
+
+  async parkLogin(parkLoginDto: ParkLoginDto) {
+    const { manageCode } = parkLoginDto;
+
+    const park = await this.parkRepository.findOne({
+      where: {
+        manageCode,
+      },
+      select: {
+        id: true,
+        role: true,
+        address: true,
+        name: true,
+      },
+    });
+
+    if (!park) throw new UnauthorizedException('Park not found');
+
+    const parkPayload = {
+      id: park.id,
+      role: park.role,
+      address: park.address,
+      name: park.name,
+    };
+
+    const accessToken = await this.jwtService.signAsync(parkPayload, {
+      secret: this.configService.get('JWT_SECRET'),
+    });
+
+    return { accessToken, park };
   }
 }

@@ -7,6 +7,9 @@ import { ParkingTransactionModule } from './parking-transaction/parking-transact
 import { PaymentModule } from './payment/payment.module';
 import { UserModule } from './user/user.module';
 import { DatabaseModule } from '../../database/database.module';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { RolesGuard } from 'src/roles/roles.guard';
 
 @Module({
   imports: [
@@ -18,6 +21,16 @@ import { DatabaseModule } from '../../database/database.module';
     PaymentModule,
     MapModule,
     DatabaseModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
   ],
 })
 export class V2Module {}
