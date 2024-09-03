@@ -131,6 +131,7 @@ export class AuthService {
         role: true,
         address: true,
         name: true,
+        ip: true,
       },
     });
 
