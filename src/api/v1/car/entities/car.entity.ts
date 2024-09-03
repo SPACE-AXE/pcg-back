@@ -1,4 +1,4 @@
-import { User } from '../../user/entities/user.entity';
+import { UserV1 } from '../../user/entities/user.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity('car')
@@ -9,6 +9,6 @@ export class Car {
   @Column({ length: 15, name: 'car_num', unique: true })
   carNum: string;
 
-  @ManyToOne(() => User, (user) => user.id, { onDelete: 'SET NULL' })
-  user: User;
+  @ManyToOne(() => UserV1, (user) => user.id, { onDelete: 'SET NULL' })
+  user: UserV1;
 }

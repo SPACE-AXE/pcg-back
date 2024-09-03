@@ -1,28 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmptyObject, IsNumber, IsString } from 'class-validator';
+import { IsIP, IsNotEmptyObject, IsNumber, IsString } from 'class-validator';
 import { LocationQueryDto } from './location.dto';
 
-export class ParkDto {
-  constructor(
-    name: string,
-    phone: string,
-    address: string,
-    totalSpace: number,
-    carSpace: number,
-    disabilitySpace: number,
-    manageCode: string,
-    location: LocationQueryDto,
-  ) {
-    this.name = name;
-    this.phone = phone;
-    this.address = address;
-    this.totalSpace = totalSpace;
-    this.carSpace = carSpace;
-    this.disabilitySpace = disabilitySpace;
-    this.manageCode = manageCode;
-    this.location = location;
-  }
-
+export class CreateParkDto {
   @IsString()
   @ApiProperty({ description: '주차장 이름' })
   name: string;
@@ -56,4 +36,10 @@ export class ParkDto {
     description: '주차장 위치 좌표',
   })
   location: LocationQueryDto;
+
+  @IsIP()
+  @ApiProperty({
+    description: '주차장 정산기 IP',
+  })
+  ip: string;
 }

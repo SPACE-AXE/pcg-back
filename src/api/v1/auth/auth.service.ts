@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import bcrypt from 'bcrypt';
-import { User } from '../user/entities/user.entity';
+import { UserV1 } from '../user/entities/user.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import nodemailer from 'nodemailer';
@@ -99,7 +99,7 @@ export class AuthService {
     } else return null;
   }
 
-  async login(user: User) {
+  async login(user: UserV1) {
     const payload = {
       username: user.username,
       id: user.id,

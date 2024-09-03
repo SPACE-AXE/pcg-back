@@ -7,14 +7,14 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from './auth.controller';
 import { JwtService } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
+import { UserV1 } from '../user/entities/user.entity';
 import { EmailToken } from './entities/email-token.entity';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
-    TypeOrmModule.forFeature([User, EmailToken]),
+    TypeOrmModule.forFeature([UserV1, EmailToken]),
   ],
   providers: [AuthService, UserService, LocalStrategy, JwtService],
   controllers: [AuthController],

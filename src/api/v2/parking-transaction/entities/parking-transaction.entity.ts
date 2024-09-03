@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Car } from '../../car/entities/car.entity';
 import { Park } from '../../park/entities/park.entity';
-import { User } from '../../user/entities/user.entity';
+import { UserV2 } from '../../user/entities/user.entity';
 import {
   AfterLoad,
   Column,
@@ -31,11 +31,11 @@ export class ParkingTransaction {
   parkingAmount: number;
   @Column({ name: 'total_amount', type: 'int', nullable: true })
   totalAmount: number;
-  @ManyToOne(() => User, (user) => user.id, {
+  @ManyToOne(() => UserV2, (user) => user.id, {
     nullable: true,
     onDelete: 'SET NULL',
   })
-  user: User;
+  user: UserV2;
   @ManyToOne(() => Park, (park) => park.id, { onDelete: 'SET NULL' })
   park: Park;
   @ManyToOne(() => Car, (car) => car.id, {

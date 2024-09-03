@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Park } from './entities/park.entity';
 import { Repository } from 'typeorm';
 import { ParkResponseDto } from './dto/park-response.dto';
+import { CreateParkDto } from './dto/create-park.dto';
+import { Point } from 'geojson';
 
 @Injectable()
 export class ParkService {
@@ -50,5 +52,38 @@ export class ParkService {
     });
     if (!park) throw new NotFoundException('Park not found');
     return park;
+  }
+
+  async create(createParkDto: CreateParkDto) {
+    const {
+      address,
+      carSpace,
+      disabilitySpace,
+      manageCode,
+      name,
+      phone,
+      totalSpace,
+      location: { x, y },
+      ip,
+    } = createParkDto;
+
+    return await this.parkRepository
+      .createQueryBuilder()
+      .insert()
+      .into(Park)
+      .values([
+        {
+          address,
+          carSpace,
+          disabilitySpace,
+          manageCode,
+          name,
+          phone,
+          totalSpace,
+          location: () => `ST_GeomFromText('POINT(${y} ${x})')`,
+          ip,
+        },
+      ])
+      .execute();
   }
 }
