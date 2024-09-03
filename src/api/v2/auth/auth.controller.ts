@@ -37,6 +37,10 @@ import LoginResponseDto from './dto/login-response.dto';
 import { JwtAuthGuard } from './jwt-auth.guard';
 import { UserResponseDto } from '../user/dto/user-response.dto';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
+import { Park } from '../park/entities/park.entity';
+import { ParkLoginDto } from 'src/api/v1/auth/dto/park.login.dto';
 
 @Controller({ path: 'auth', version: '2' })
 @ApiTags('인증')
@@ -62,7 +66,23 @@ export class AuthController {
     res
       .setHeader(AccessToken, accessToken)
       .setHeader(RefreshToken, refreshToken)
+      .cookie(AccessToken, accessToken)
+      .cookie(RefreshToken, refreshToken)
       .send(user);
+  }
+
+  @Post('park/login')
+  @ApiOperation({ summary: '주차장 로그인' })
+  @HttpCode(200)
+  @ApiBody({ type: ParkLoginDto })
+  @ApiOkResponse({
+    description: '로그인 성공 (헤더에 토큰 발급)',
+    type: Park,
+  })
+  async parkLogin(@Body() parkLoginDto: ParkLoginDto, @Res() res: Response) {
+    const { accessToken, park } =
+      await this.authService.parkLogin(parkLoginDto);
+    res.cookie(AccessToken, accessToken).send(park);
   }
 
   @Post('register')
@@ -78,9 +98,7 @@ export class AuthController {
   @ApiOkResponse({ description: '토큰 유효', type: UserResponseDto })
   @ApiUnauthorizedResponse({ description: '토큰 만료' })
   @ApiForbiddenResponse({ description: '토큰 없음' })
-  @UseGuards(JwtAuthGuard)
-  @ApiBearerAuth(AccessToken)
-  @ApiBearerAuth(RefreshToken)
+  @Roles(Role.USER)
   @HttpCode(200)
   async validate(@Req() req: Request) {
     return req.user;
@@ -126,5 +144,16 @@ export class AuthController {
   @ApiUnauthorizedResponse({ description: '토큰 불일치 또는 토큰 만료' })
   async resetPassword(@Body() body: ResetPasswordDto) {
     return this.authService.resetPassword(body);
+  }
+
+  @Post('logout')
+  @ApiOperation({
+    summary: '로그아웃(쿠키 로그아웃)',
+    description:
+      '해당 엔드포인트는 쿠키 로그인의 로그아웃 엔드포인트입니다. 헤더로 발급받은 토큰의 경우 프론트엔드에서 자체 폐기하면 로그아웃으로 간주됩니다.',
+  })
+  @Roles(Role.ADMIN, Role.USER)
+  logout(@Res() res: Response) {
+    res.clearCookie(AccessToken).clearCookie(RefreshToken).send();
   }
 }

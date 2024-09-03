@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import bcrypt from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { UserV1 } from './entities/user.entity';
 import { IsNull, Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { FindUsernameDto } from '../auth/dto/find-username.dto';
@@ -12,7 +12,8 @@ import { ResetEmailDto } from '../auth/dto/reset-email.dto';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserV1)
+    private readonly userRepository: Repository<UserV1>,
     private readonly configService: ConfigService,
   ) {}
 

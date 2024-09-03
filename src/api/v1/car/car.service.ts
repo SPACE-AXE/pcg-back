@@ -3,7 +3,7 @@ import { CreateCarDto } from './dto/create-car.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Car } from './entities/car.entity';
 import { Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
+import { UserV1 } from '../user/entities/user.entity';
 import { ParkingTransaction } from '../parking-transaction/entities/parking-transaction.entity';
 
 @Injectable()
@@ -14,7 +14,7 @@ export class CarService {
     private readonly parkingTransactionRepository: Repository<ParkingTransaction>,
   ) {}
 
-  async create(user: User, createCarDto: CreateCarDto) {
+  async create(user: UserV1, createCarDto: CreateCarDto) {
     const newCar = this.carRepository.create({
       user: { id: user.id },
       carNum: createCarDto.carNum,
@@ -31,13 +31,13 @@ export class CarService {
     return result;
   }
 
-  findAll(user: User) {
+  findAll(user: UserV1) {
     return this.carRepository.find({
       where: { user: { id: user.id } },
     });
   }
 
-  async remove(id: number, user: User) {
+  async remove(id: number, user: UserV1) {
     return this.carRepository.delete({ id, user });
   }
 }

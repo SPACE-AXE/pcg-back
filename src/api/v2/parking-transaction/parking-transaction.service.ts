@@ -8,7 +8,7 @@ import { CreateParkingTransactionDto } from './dto/create-parking-transaction.dt
 import { InjectRepository } from '@nestjs/typeorm';
 import { ParkingTransaction } from './entities/parking-transaction.entity';
 import { IsNull, Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
+import { UserV2 } from '../user/entities/user.entity';
 import { Car } from '../car/entities/car.entity';
 import { CHARGING_FEE_PER_SECOND, KR_TIME_DIFF } from 'src/constants/constants';
 
@@ -156,19 +156,19 @@ export class ParkingTransactionService {
     return chargeTime;
   }
 
-  findAll(user: User) {
+  findAll(user: UserV2) {
     return this.parkingTransactionRepository.find({
       where: { user: { id: user.id } },
     });
   }
 
-  findUnpaidParkingTransactions(user: User, paymentId: string) {
+  findUnpaidParkingTransactions(user: UserV2, paymentId: string) {
     return this.parkingTransactionRepository.findOne({
       where: { isPaid: false, user: { id: user.id }, paymentId },
     });
   }
 
-  async getParkedCars(user: User) {
+  async getParkedCars(user: UserV2) {
     const parkedCars = await this.parkingTransactionRepository.find({
       where: { user: { id: user.id }, isPaid: false },
     });

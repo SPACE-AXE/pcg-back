@@ -1,4 +1,4 @@
-import { User } from '../../user/entities/user.entity';
+import { UserV2 } from '../../user/entities/user.entity';
 import {
   Column,
   Entity,
@@ -18,7 +18,7 @@ export class EmailToken {
   @Column({ name: 'created_at', type: 'datetime' })
   createdAt: Date;
 
-  @OneToOne(() => User, (user) => user.emailToken, { onDelete: 'CASCADE' })
+  @OneToOne(() => UserV2, (user) => user.emailToken, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  user: UserV2;
 }

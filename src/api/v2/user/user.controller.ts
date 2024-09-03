@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Req } from '@nestjs/common';
 import { UserService } from './user.service';
 
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -12,15 +12,16 @@ import {
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Request } from 'express';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { UserResponseDto } from './dto/user-response.dto';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
 
+@Roles(Role.USER)
 @Controller({ path: 'user', version: '2' })
 @ApiTags('사용자')
 @ApiBearerAuth(AccessToken)
 @ApiBearerAuth(RefreshToken)
-@UseGuards(JwtAuthGuard)
 @ApiUnauthorizedResponse({ description: '토큰 만료' })
 @ApiBadRequestResponse({ description: '입력값 오류' })
 export class UserController {

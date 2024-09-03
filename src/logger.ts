@@ -15,6 +15,7 @@ export const loggerOptions = {
     new winston.transports.Console({
       format: winston.format.combine(
         winston.format.timestamp(),
+        winston.format.ms(),
         nestWinstonModuleUtilities.format.nestLike('Park-Charge-Go', {
           prettyPrint: true,
           colors: true,

@@ -5,7 +5,6 @@ import {
   Body,
   Param,
   Delete,
-  UseGuards,
   Req,
 } from '@nestjs/common';
 import { CarService } from './car.service';
@@ -19,16 +18,17 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { Request } from 'express';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CarResponseDto } from './dto/car-response.dto';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
 
 @Controller({ path: 'car', version: '2' })
 @ApiTags('차량')
 @ApiBearerAuth(AccessToken)
 @ApiBearerAuth(RefreshToken)
-@UseGuards(JwtAuthGuard)
+@Roles(Role.USER)
 @ApiBadRequestResponse({ description: '입력값 오류' })
 @ApiUnauthorizedResponse({ description: '토큰 만료' })
 export class CarController {

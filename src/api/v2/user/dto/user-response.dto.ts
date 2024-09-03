@@ -1,7 +1,7 @@
 import { OmitType } from '@nestjs/swagger';
-import { User } from '../entities/user.entity';
+import { UserV2 } from '../entities/user.entity';
 
-export class UserResponseDto extends OmitType(User, [
+export class UserResponseDto extends OmitType(UserV2, [
   'card',
   'emailToken',
   'password',

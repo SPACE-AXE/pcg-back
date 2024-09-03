@@ -25,11 +25,13 @@ import {
 import { AccessToken, RefreshToken } from 'src/constants/constants';
 import { CardResponseDto } from './dto/card-response.dto';
 import { PayDto } from './dto/pay.dto';
+import { Roles } from 'src/roles/roles.decorator';
+import { Role } from 'src/roles/roles.enum';
 
 @Controller({ path: 'payment', version: '2' })
-@UseGuards(JwtAuthGuard)
 @ApiBearerAuth(AccessToken)
 @ApiBearerAuth(RefreshToken)
+@Roles(Role.USER)
 @ApiTags('결제')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}

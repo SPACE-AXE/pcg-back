@@ -25,7 +25,7 @@ import {
   ApiTags,
   ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
-import { User } from '../user/entities/user.entity';
+import { UserV1 } from '../user/entities/user.entity';
 import { CreateUserDto } from '../user/dto/create-user.dto';
 import { UserService } from '../user/user.service';
 import { AccessToken, RefreshToken } from 'src/constants/constants';
@@ -53,7 +53,7 @@ export class AuthController {
   })
   @ApiUnauthorizedResponse({ description: '아이디 또는 비밀번호 틀림' })
   async login(@Req() req: Request, @Res() res: Response) {
-    const userData = req.user as User;
+    const userData = req.user as UserV1;
     const { user, ...tokens } = await this.authService.login(userData);
     res
       .cookie(AccessToken, tokens.accessToken, { httpOnly: true })
